@@ -93,11 +93,11 @@ export default {
           window.localStorage.setItem('madblog-token', response.data.token)
           store.resetNotNewAction()
           store.loginAction()
-
           if (typeof this.$route.query.redirect == 'undefined') {
             this.$router.push('/')
           } else {
-            this.$router.push(this.$route.query.redirect)
+            // （？）这什么意思？
+            this.$router.push(this.$route.query.redirect)  
           }
         })
         .catch((error) => {

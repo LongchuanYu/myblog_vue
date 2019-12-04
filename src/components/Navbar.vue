@@ -32,6 +32,9 @@
             <li class="nav-item">
                 <router-link to="/profile" class="nav-link">Profile</router-link>
             </li>
+          <li class="nav-item">
+            <a v-on:click="handlerLogout" class="nav-link" href="#">Logout</a>
+          </li>
             <li class="nav-item">
                 <router-link to="/login" class="nav-link">Login</router-link>
             </li>
@@ -41,7 +44,19 @@
   </nav>
 </template>
 <script>
+import store from '../store.js'
 export default {
-    name:'Navbar'
+    name:'Navbar',
+    data(){
+        return {
+            shareState:store.state
+        }
+    },
+    methods:{
+        handlerLogout(e){
+            store.logoutAction()
+            this.$router.push('/login')
+        }
+    }
 }
 </script>
