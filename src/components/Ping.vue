@@ -16,24 +16,25 @@ export default {
     },
     methods:{
         handleBtn(){
-            const path = 'http://localhost:5000/api/tokens';
-            axios({
-                url:path,
-                method:'post',
-                auth:{
-                    username:"liyang3",
-                    password:"1234"
-                }
-            }).then(res => {
-                // res = res.data.token.split('.')[0]
+            this.$toasted.success('ok!ok!')
+        //     const path = 'http://localhost:5000/api/tokens';
+        //     axios({
+        //         url:path,
+        //         method:'post',
+        //         auth:{
+        //             username:"liyang3",
+        //             password:"1234"
+        //         }
+        //     }).then(res => {
+        //         // res = res.data.token.split('.')[0]
 
-                // console.log(JSON.parse(atob(res)))
-                var ret = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-                console.log(atob(ret))
-            })
-            .catch(e => {
-                console.error(e);
-            })
+        //         // console.log(JSON.parse(atob(res)))
+        //         var ret = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+        //         console.log(atob(ret))
+        //     })
+        //     .catch(e => {
+        //         console.error(e);
+        //     })
         },
 
     },

@@ -86,7 +86,7 @@ export default {
         email: this.registerForm.email,
         password: this.registerForm.password
       }
-      axios.post(path, payload)
+      this.$axios.post(path, payload)
         .then((response) => {
           // handle success
           store.setNewAction()

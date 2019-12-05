@@ -83,7 +83,7 @@ export default {
 
       const path = 'http://localhost:5000/api/tokens'
       // axios 实现Basic Auth需要在config中设置 auth 这个属性即可
-      axios.post(path, {}, {
+      this.$axios.post(path, {}, {
         auth: {
           'username': this.loginForm.username,
           'password': this.loginForm.password
