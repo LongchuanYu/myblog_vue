@@ -88,7 +88,7 @@ export default {
           'username': this.loginForm.username,
           'password': this.loginForm.password
         }
-      }).then((response) => {
+      }).then((response) => {          
           // handle success
           window.localStorage.setItem('madblog-token', response.data.token)
           store.resetNotNewAction()
@@ -97,6 +97,10 @@ export default {
             this.$router.push('/')
           } else {
             // （？）这什么意思？
+            //  1、redirect信息：/login?redirect=%2F
+            //  2、this.$route.query.redirect,得到url中的查询信息redirect
+            //  3、redirect查询信息在路由守卫中定义的。
+            //  4.初步理解是记录登录前的url，登陆之后根据这个url跳转到登录前的界面。对，就是的
             this.$router.push(this.$route.query.redirect)  
           }
         })
