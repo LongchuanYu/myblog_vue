@@ -16,7 +16,7 @@ export default {
     },
     methods:{
         handleBtn(){
-            this.$toasted.success('ok!ok!')
+            this.$toasted.show('yes')
         //     const path = 'http://localhost:5000/api/tokens';
         //     axios({
         //         url:path,

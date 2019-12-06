@@ -4,8 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap.js'
 import VueToasted from 'vue-toasted'
-import axios from 'axios'
+import axios from './http'
 
 Vue.config.productionTip = false
 
