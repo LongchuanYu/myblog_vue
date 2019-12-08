@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button type="button" class="btn btn-primary" @click="handleBtn">{{msg}}</button>
+        <button type="button" class="btn btn-primary" @click="handleBtn">Test</button>
     </div>
 </template>
 
@@ -16,25 +16,16 @@ export default {
     },
     methods:{
         handleBtn(){
-            this.$toasted.show('yes')
-        //     const path = 'http://localhost:5000/api/tokens';
-        //     axios({
-        //         url:path,
-        //         method:'post',
-        //         auth:{
-        //             username:"liyang3",
-        //             password:"1234"
-        //         }
-        //     }).then(res => {
-        //         // res = res.data.token.split('.')[0]
-
-        //         // console.log(JSON.parse(atob(res)))
-        //         var ret = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-        //         console.log(atob(ret))
-        //     })
-        //     .catch(e => {
-        //         console.error(e);
-        //     })
+            const path = 'http://127.0.0.1:5000/api/users?page=1&per_page=10';
+            this.$axios({
+                url:path,
+                method:'get',
+            }).then(res => {
+                console.log(res)
+            })
+            .catch(e => {
+                console.error(e);
+            })
         },
 
     },
