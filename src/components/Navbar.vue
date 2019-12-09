@@ -30,6 +30,7 @@
                 <a class="nav-link disabled" href="#">Messages</a>
             </li>
             <li class="nav-item">
+                <!-- 路由跳转带参数的形似 -->
                 <router-link v-bind:to="{name:'Profile',params:{id:shareState.user_id}}" class="nav-link">Profile</router-link>
             </li>
           <li class="nav-item">

@@ -5,6 +5,7 @@ import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Ping from '@/components/Ping'
 import Profile from '@/components/Profile'
+import EditProfile from '@/components/EditProfile'
 Vue.use(Router)
 
 const router = new Router({
@@ -38,6 +39,10 @@ const router = new Router({
       meta:{
         requiresAuth:true
       }
+    },{
+      path:'/edit/:id',
+      name:'EditProfile',
+      component:EditProfile
     }
   ]
 })

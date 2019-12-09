@@ -10,7 +10,7 @@ axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     
     const token = window.localStorage.getItem('madblog-token')
-    console.log('request ok..'+token)
+    console.log('request ok..')
     if(token){
         config.headers.Authorization = `Bearer ${token}`
     }

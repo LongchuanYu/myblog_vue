@@ -8,10 +8,12 @@ import 'bootstrap/dist/js/bootstrap.js'
 import './assets/fontawesome/css/all.css'
 import VueToasted from 'vue-toasted'
 import axios from './http'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
+Vue.prototype.$moment = moment
 
 Vue.use(VueToasted, {
   // 主题样式 primary/outline/bubble
