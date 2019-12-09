@@ -19,9 +19,15 @@ export default {
     },
     methods:{
         handleBtn(){
-            var lastseen = new Date().toUTCString()
-            console.log(lastseen)
-            console.log(this.$moment(lastseen).format('YYYY-MM-DD HH:mm'))
+            var peo = {
+                name:'liyang',
+                relation:{
+                    one:[1,2,3],
+                    tow:[4,5,6]
+                }
+            }
+            var enn =undefined
+            console.log(enn.hello || peo.name)
             //console.log(this.$moment(lastseen).utcOffset("+08:00").format('YYYY-MM-DD HH:mm'))
             // const path = 'http://127.0.0.1:5000/api/users?page=1&per_page=10';
             // this.$axios({

@@ -9,7 +9,7 @@
                     <div class='avatar pb-3'>
                         <img :src="user._links.avatar" alt="" class="rounded img-fluid w-100" >
                     </div>
-                    <router-link :to="{name:'EditProfile',params:{user:user}}" v-if="sharestate.user_id == $route.params.id">
+                    <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-5">Edit profile</button>
                     </router-link>
                     <button v-else type="button" class="btn btn-outline-secondary w-100 mb-5 disabled custom-btn">Edit profile</button>
@@ -32,6 +32,10 @@
                         <i class="far fa-address-card mr-2"></i>verified User：{{user.email}}
                     </h6>
                     <h6 class="mb-3 font-weight-normal"><i class="far fa-map mr-2"></i>{{user.location}}</h6>
+
+                    <hr>
+                    <!-- about me -->
+                    <p class="lead">{{ user.about_me }}</p>
                 </div>
             </div>
         </div>
