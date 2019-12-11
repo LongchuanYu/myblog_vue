@@ -67,6 +67,14 @@ export default {
     },
     methods:{
         getUser(userid){
+            //（？）如何实现范围外的userid引发404错误，然后返回原路由？
+            //  在全局axios中实现，拦截了response。对于404，route.back()
+            //（？）为何在Profile页面登录后没有route.back()?而是进入/user/0的路由？
+            //  1.未登录状态下Profile的路由是/user/0，在这个时候登录自然是进入/user/0的路由了。
+            //  2.store.js中：退出的时候会有一个清理动作，把userid设置为0
+            //  ....因此在未登录状态下点击Profile按钮就是/user/0
+            // 
+
             this.$axios.get(`/users/${userid}`)
             .then((res)=>{
                 this.user = res.data
@@ -80,8 +88,9 @@ export default {
         //（？）这里怎么获取userid呢？
         //  1.用this.sharestate.user_id ,但这样无法动态响应路由变化。。
         //  2.通过this.$route.params.id来访问路由传参
-        const userid = this.$route.params.id
+        let userid = this.$route.params.id
         this.getUser(userid)
+        
     },
     beforeRouteUpdate(to,from,next){
         this.getUser(to.params.id)

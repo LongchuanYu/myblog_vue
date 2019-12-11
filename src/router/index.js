@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import Ping from '@/components/Ping'
 import Profile from '@/components/Profile'
 import EditProfile from '@/components/EditProfile'
+import store from '../store.js'
 Vue.use(Router)
 
 const router = new Router({
@@ -55,7 +56,7 @@ router.beforeEach((to, from, next) => {
   //  用法详见路由守卫 -> 路由元信息
   //（？）if条件怎么理解？
   //  meta信息定义在路由中：path:'/'
-  //  $router.matched类似于面包屑的效果
+  // 
   //（？）为什么要跳转到一个带查询参数的url？
   //  初步理解是记录登录前的url，登陆之后根据这个url跳转到登录前的界面
   if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
