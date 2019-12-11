@@ -1,44 +1,51 @@
 <template>
-    <div>
-        <router-link to='/'>
-            <button>route test</button>
-        </router-link>
-        <button type="button" class="btn btn-primary" @click="handleBtn">Test</button>
+    <div class="container">
+        <div class="col-md-4">
+            <form @submit.prevent="onSubmit">
+            <div class="form-group">
+                <label for="title">title</label>
+                <input type="text" class="form-control" id="title" aria-describedby="emailHelp" v-model="title">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="textbody">body</label>
+                <textarea rows="5" class="form-control" id="textbody" v-model="textbody"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import store from '../store.js'
 export default {
     // import的时候用name的值
     name:'Ping',
     data(){
         return {
-            msg:'this is ping.vue component'
+            sharestate:store.state,
+            title:'',
+            textbody:''
+
         }
     },
     methods:{
-        handleBtn(){
-            var peo = {
-                name:'liyang',
-                relation:{
-                    one:[1,2,3],
-                    tow:[4,5,6]
-                }
+        onSubmit(){
+            console.log(this.sharestate.user_id)
+            const path = '/ping'
+            let payload = {
+                title:this.title,
+                body:this.textbody,
+                author_id:this.sharestate.user_id
             }
-            var enn =undefined
-            console.log(enn.hello || peo.name)
-            //console.log(this.$moment(lastseen).utcOffset("+08:00").format('YYYY-MM-DD HH:mm'))
-            // const path = 'http://127.0.0.1:5000/api/users?page=1&per_page=10';
-            // this.$axios({
-            //     url:path,
-            //     method:'get',
-            // }).then(res => {
-            //     console.log(res)
-            // })
-            // .catch(e => {
-            //     console.error(e);
-            // })
+            this.$axios.post(path,payload)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(e=>{
+                console.log(e.response)
+            })
         }
 
     }
