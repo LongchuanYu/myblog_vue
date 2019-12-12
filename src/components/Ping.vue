@@ -33,7 +33,7 @@ export default {
     methods:{
         onSubmit(){
             console.log(this.sharestate.user_id)
-            const path = '/ping'
+            const path = '/posts'
             let payload = {
                 title:this.title,
                 body:this.textbody,

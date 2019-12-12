@@ -73,7 +73,7 @@ export default {
             //  1.未登录状态下Profile的路由是/user/0，在这个时候登录自然是进入/user/0的路由了。
             //  2.store.js中：退出的时候会有一个清理动作，把userid设置为0
             //  ....因此在未登录状态下点击Profile按钮就是/user/0
-            // 
+            //  ....修复方法在当前组件的created函数里面，通过跳转到正确路由来解决
 
             this.$axios.get(`/users/${userid}`)
             .then((res)=>{
@@ -89,8 +89,11 @@ export default {
         //  1.用this.sharestate.user_id ,但这样无法动态响应路由变化。。
         //  2.通过this.$route.params.id来访问路由传参
         let userid = this.$route.params.id
+        if (userid=="0"){
+            userid = this.sharestate.user_id
+            this.$router.replace(`/user/${userid}`)
+        }
         this.getUser(userid)
-        
     },
     beforeRouteUpdate(to,from,next){
         this.getUser(to.params.id)
