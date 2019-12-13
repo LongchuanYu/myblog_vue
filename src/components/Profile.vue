@@ -24,14 +24,14 @@
                     </div>
                     <!-- Member since -->
                     <h6 class="mb-3 font-weight-normal">
-                        <i class="far fa-user mr-2"></i>Member since：{{user.member_since ? $moment(user.member_since).format("YYYY-MM-DD HH:mm") : ""}}
+                        <i class="fa fa-user-o mr-2"></i>Member since：{{user.member_since ? $moment(user.member_since).format("YYYY-MM-DD HH:mm") : ""}}
                     </h6>
                     <h6 class="mb-3 font-weight-normal">
-                        <i class="far fa-clock mr-2"></i>Last seen：{{user.last_seen ? $moment(user.last_seen).fromNow():""}}</h6>
+                        <i class="fa fa-clock-o mr-2"></i>Last seen：{{user.last_seen ? $moment(user.last_seen).fromNow():""}}</h6>
                     <h6 class="mb-3 font-weight-normal">
-                        <i class="far fa-address-card mr-2"></i>verified User：{{user.email}}
+                        <i class="fa fa-address-card-o mr-2"></i>verified User：{{user.email}}
                     </h6>
-                    <h6 class="mb-3 font-weight-normal"><i class="far fa-map mr-2"></i>{{user.location}}</h6>
+                    <h6 class="mb-3 font-weight-normal"><i class="fa fa-map-marker mr-2"></i>{{user.location}}</h6>
 
                     <hr>
                     <!-- about me -->

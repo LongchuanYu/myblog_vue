@@ -32,7 +32,26 @@ export default {
     },
     methods:{
         onSubmit(){
-            console.log(this.sharestate.user_id)
+            const userid = this.sharestate.user_id
+            this._updatepost(userid)
+        },
+        _updatepost(id){
+            console.log("update post..")
+            const path = '/posts/'+String(id)
+            let payload = {
+                title:this.title,
+                body:this.textbody
+            }
+            this.$axios.put(path,payload)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(e=>{
+                console.log(e.response)
+            })
+        },
+        _createpost(){
+           console.log("create post..")
             const path = '/posts'
             let payload = {
                 title:this.title,
