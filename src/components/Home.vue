@@ -39,22 +39,18 @@
             </div>
             <!-- posts列表 -->
             <div v-if="posts">
-            <div class="card-body border mb-3" v-for="(post,index) in posts.items" v-bind:key="index">
-                <div class="container" >
-                    <div class="row">
-                        <div class="col-1"><!-- 头像列 -->
-                            <img :src="post.author._links.avatar" alt="" class="rounded img-thumbnail" style="min-width:20px">
+            <div class="card-body border mb-3 d-flex align-items-start" v-for="(post,index) in posts.items" v-bind:key="index">
+                        <div class=""><!-- 头像列 -->
+                            <img :src="post.author._links.avatar" alt="" class="d-flex mr-4" style="width:50px">
                         </div>
-                        <div class="col-11"><!-- 内容列 -->
-                            <div class="mb-2" ><!-- 标题行 -->
-                                <div class="d-inline-block text-truncate" style="width:70%;">
-                                    <router-link :to="{name:'Post',params:{id:post.id}}" class="h5">{{post.title}}</router-link>
-                                </div>
+                        <div class="w-75" style="flex:1;"><!-- 内容列 -->
+                            <div class="mb-2 d-flex justify-content-between" ><!-- 标题行 -->
+                                <router-link :to="{name:'Post',params:{id:post.id}}" class="h5 text-truncate w-75">{{post.title}}</router-link>
                                 <!-- 
                                     （？）获取的post表里面只有author_id，怎么获取用户名呢？
                                         1.后端传过来的posts中包含author信息
                                 -->
-                                <div class="d-inline-block float-right  text-truncate" >
+                                <div class="d-inline-block  text-truncate" >
                                     <small>{{$moment(post.timestamp).fromNow()}} /</small>
                                     <router-link :to="{name:'Profile',params:{id:post.author.id}}"><small>{{post.author.username||post.author.name}}</small></router-link>
                                 </div>
@@ -74,8 +70,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
             </div> <!-- card body结束 -->
             </div>
             <!-- -------------Pagination-------------- -->

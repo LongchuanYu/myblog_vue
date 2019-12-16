@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
+            <!-- Article Content -->
             <div class="col-md-9">
                 <article>
                     <vue-markdown
@@ -8,13 +9,21 @@
                         toc
                         :toc-first-level="1"
                         :toc-last-level="3"
+                        toc-id="toc"
+                        toc-anchor-link-space
                         class="markdown-body">
                     </vue-markdown>
-                </article>
+                </article> 
+            </div>  <!-- End Article Content -->
+            <div class="col-md-3">
+                <div id="sticker">
+                    <div id="tocHeader" >
+                        <h2>文章目录</h2>
+                    </div>
+                    <div id="toc" class="toc"></div>
 
-
+                </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -33,8 +42,8 @@ export default {
         VueMarkdown
     },
     methods:{
-        _getPost(){
-            const postid = this.$route.params.id
+        _getPost(postid){
+            
             let path = `/posts/${postid}`
             this.$axios.get(path)
             .then(res=>{
@@ -46,7 +55,12 @@ export default {
         }
     },
     created:function(){
-        this._getPost()
-    }
+        const postid = this.$route.params.id
+        this._getPost(postid)
+    },
+    // beforeRouteUpdate(to,from,next){
+    //     this._getPost(to.params.id)
+    //     next()
+    // }
 }
 </script>
