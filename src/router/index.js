@@ -6,7 +6,7 @@ import Login from '@/components/Login'
 import Ping from '@/components/Ping'
 import Profile from '@/components/Profile'
 import EditProfile from '@/components/EditProfile'
-import store from '../store.js'
+import Post from '@/components/Post'
 Vue.use(Router)
 
 const router = new Router({
@@ -40,6 +40,10 @@ const router = new Router({
       meta:{
         requiresAuth:true
       }
+    },{
+      path:'/post/:id',
+      name:'Post',
+      component:Post
     },{
       path:'/edit/:id',
       name:'EditProfile',

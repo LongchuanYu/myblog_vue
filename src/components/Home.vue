@@ -1,17 +1,25 @@
 <template>
     <div class="container">
+        <!-- 
+            （？）.prevent有什么作用? 
+                答：阻止默认的表单提交，这里用自己的方法onSubmitAdd来提交表单
+        -->
         <form v-if="sharestate.is_authenticated" @submit.prevent="onSubmitAdd" class = "mb-4">
             <div class="form-group">
-                <input type="text" v-model="postForm.title" class="form-control" id="post_title" placeholder="标题">
+                <input type="text" v-model="postForm.title" v-bind:class="{'form-control':true,'is-invalid':postForm.titleError }" id="post_title" placeholder="标题" required>
+                <div class="invalid-feedback">{{postForm.titleError}}</div>
             </div>
             <div class="form-group">
-                <input type="text" v-bind="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">
+                <input type="text" v-model="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">
             </div>
             <div class="form-group">
                 <textarea v-model="postForm.body" id="post_body" rows="5" class="form-control"></textarea>
+                <div class="invalid-feedback">{{postForm.bodyError}}</div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+
+
         <div class="card border-0 mb-4">
             <!-- 列表头部 -->
             <div class="card-header d-flex align-items-center justify-content-between bg-light border-0 mb-3">
@@ -40,9 +48,7 @@
                         <div class="col-11"><!-- 内容列 -->
                             <div class="mb-2" ><!-- 标题行 -->
                                 <div class="d-inline-block text-truncate" style="width:70%;">
-                                    <span class="h4">
-                                        {{post.title}}
-                                    </span>
+                                    <router-link :to="{name:'Post',params:{id:post.id}}" class="h5">{{post.title}}</router-link>
                                 </div>
                                 <!-- 
                                     （？）获取的post表里面只有author_id，怎么获取用户名呢？
@@ -54,13 +60,13 @@
                                 </div>
                             </div>
                             <!-- 文章summary -->
-                            <div class="d-block text-wrap overflow-hidden mb-2" style="height:6em">
+                            <div class="d-block text-wrap overflow-hidden mb-2" style="height:3em">
                                 {{post.summary}}
                             </div>
                             <!-- 操作栏 -->
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="">
-                                    <i class="fa fa-eye"></i>1112
+                                    <i class="fa fa-eye text-muted mr-1"></i><small>1111</small>
                                 </div>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-outline-secondary btn-sm">删除</button>
@@ -93,7 +99,7 @@
                             2.如果是从主页进入（即没有路由query），并且页码是1的按钮亮起来。
                      -->
                     <li v-bind:class="{'page-item':1,'active':$route.query.page==page || (!$route.query.page && page==1)}" v-for="(page,index) in iter_pages" v-bind:key="index">
-                        <router-link :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}"><a class="page-link">{{page}}</a></router-link>
+                        <router-link :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}" class="page-link">{{page}}</router-link>
                         
                     </li>
 
@@ -135,14 +141,66 @@ export default {
             postForm:{
                 title:'',
                 summary:'',
-                body:''
+                body:'',
+                errors:0,
+                titleError:null,
+                bodyError:null
             }
         }
     },
     methods:{
+        onSubmitAdd(){
+            this._putPosts()
+
+        },
+        _putPosts(){
+            this.postForm.errors=0
+            this.postForm.titleError=''
+            this.postForm.bodyError=''
+            const {title,summary,body} = this.postForm
+            let path = '/posts'
+            if($.trim(title)=='' || !this.postForm.title){
+                this.postForm.errors+=1
+                this.postForm.titleError='Please input your title.'
+            }
+            if($.trim(body)=='' || !this.postForm.body){
+                this.postForm.errors+=1
+                this.postForm.bodyError='Please input your article.'
+                $(".md-editor").addClass("is-invalid")
+            }else{
+                 $(".md-editor").removeClass("is-invalid")
+            }
+            if(this.postForm.errors){
+                return
+            }
+            let payload = {
+                title:title,
+                summary:summary,
+                body:body,
+                author_id:this.sharestate.user_id
+            }
+            this.$axios.post(path,payload)
+            .then(res=>{
+                this._getPosts()
+                this.postForm.title = ''
+                this.postForm.summary=''
+                this.postForm.body=''
+            })
+            .catch(e=>{
+                console.log(e.response)
+            })
+
+        },
         _getPosts(){
             let page = 1
             let per_page = 4
+            //检验query参数，如果不正确则返回之前的路由
+            if (this.$route.query.page && this.$route.query.per_page){
+                if(this.$route.query.page<1 || 
+                this.$route.query.page>this.posts._meta.total_pages || 
+                this.$route.query.per_page<1
+                ){this.$router.back()}
+            }
             if (typeof this.$route.query.page != 'undefined'){
                 page = this.$route.query.page
             }
@@ -155,8 +213,8 @@ export default {
                     page:page,
                     per_page:per_page
                 }
-            }).then(res=>{  
-                console.log(res)              
+            }).then(res=>{
+                console.log(res)         
                 this.posts = res.data
                 let c = this.posts._meta.page
                 let arr = [1,c-2,c-1,  c  ,c+1,c+2,this.posts._meta.total_pages] //7 ittems
@@ -200,3 +258,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+a:hover{
+    text-decoration: none;
+}
+</style>

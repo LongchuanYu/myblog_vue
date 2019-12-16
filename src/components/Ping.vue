@@ -32,8 +32,9 @@ export default {
     },
     methods:{
         onSubmit(){
-            const userid = this.sharestate.user_id
-            this._updatepost(userid)
+            let str = '    1'
+            console.log(str)
+            console.log($.trim(str))
         },
         _updatepost(id){
             console.log("update post..")
