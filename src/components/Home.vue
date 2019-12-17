@@ -1,5 +1,40 @@
 <template>
     <div class="container">
+        <!-- --------------------Modal------------------------ -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Recipient:</label>
+                    <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Message:</label>
+                    <textarea class="form-control" id="message-text"></textarea>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+
+
+
+        <!-- ---------------------新增post--------------------- -->
         <!-- 
             （？）.prevent有什么作用? 
                 答：阻止默认的表单提交，这里用自己的方法onSubmitAdd来提交表单
@@ -19,7 +54,7 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
-
+        <!-- ---------------Card-------------- -->
         <div class="card border-0 mb-4">
             <!-- 列表头部 -->
             <div class="card-header d-flex align-items-center justify-content-between bg-light border-0 mb-3">
@@ -44,7 +79,7 @@
                             <img :src="post.author._links.avatar" alt="" class="d-flex mr-4" style="width:50px">
                         </div>
                         <div class="w-75" style="flex:1;"><!-- 内容列 -->
-                            <div class="mb-2 d-flex justify-content-between" ><!-- 标题行 -->
+                            <div class="mb-2 d-flex justify-content-between flex-wrap" ><!-- 标题行 -->
                                 <router-link :to="{name:'Post',params:{id:post.id}}" class="h5 text-truncate w-75">{{post.title}}</router-link>
                                 <!-- 
                                     （？）获取的post表里面只有author_id，怎么获取用户名呢？
@@ -65,13 +100,14 @@
                                     <i class="fa fa-eye text-muted mr-1"></i><small>1111</small>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm">删除</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">编辑</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">删除</button>
                                 </div>
                             </div>
                         </div>
             </div> <!-- card body结束 -->
             </div>
+
             <!-- -------------Pagination-------------- -->
             <nav>
                 <ul class="pagination">
