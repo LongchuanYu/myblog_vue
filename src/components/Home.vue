@@ -2,29 +2,32 @@
     <div class="container">
         <!-- --------------------Modal------------------------ -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update Post</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form @submit.prevent="onSubmitUpdate" @reset.prevent="onResetUpdate">
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Recipient:</label>
-                    <input type="text" class="form-control" id="recipient-name">
+                    <input type="text" v-model="editForm.title" v-bind:class="{'form-control':true,'is-invalid':editForm.titleError }" id="edit_title" placeholder="标题" required>
+                    <div class="invalid-feedback">{{editForm.titleError}}</div>
                 </div>
                 <div class="form-group">
-                    <label for="message-text" class="col-form-label">Message:</label>
-                    <textarea class="form-control" id="message-text"></textarea>
+                    <input type="text" v-model="editForm.summary" class="form-control" id="edit_summary" placeholder="摘要">
+                </div>
+                <div class="form-group">
+                    <textarea v-model="editForm.body" id="edit_body" rows="5" class="form-control"></textarea>
+                    <div class="invalid-feedback">{{editForm.bodyError}}</div>
                 </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Update</button>
             </div>
             </div>
         </div>
@@ -100,7 +103,7 @@
                                     <i class="fa fa-eye text-muted mr-1"></i><small>1111</small>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">编辑</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#exampleModal" @click="onEditPost(post)">编辑</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">删除</button>
                                 </div>
                             </div>
@@ -175,10 +178,30 @@ export default {
                 errors:0,
                 titleError:null,
                 bodyError:null
+            },
+            editForm:{
+                title:'',
+                summary:'',
+                body:'',
+                errors:0,
+                titleError:null,
+                bodyError:null
             }
         }
     },
     methods:{
+        //编辑按钮按下
+        onEditPost(post){
+            this.editForm.title = post.title
+            this.editForm.summary = post.summary
+            this.editForm.body = post.body
+            $("#edit_body").markdown({
+                autofocus:false,
+                savable:false,
+                iconlibrary: 'fa',  // 使用Font Awesome图标
+                language: 'zh'
+            })
+        },
         onSubmitAdd(){
             this._putPosts()
 

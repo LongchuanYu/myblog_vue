@@ -83,7 +83,7 @@ export default {
 
 <style>
 .toc {
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 .toc ul {
     list-style-type: none;
