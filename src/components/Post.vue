@@ -1,15 +1,23 @@
 <template>
-    <div class="container">
-        <div class="row">
+    <div class="container">        
+        <div class="row mt-4">
             <!-- Article Content -->
             <div class="col-md-9">
                 <article class="">
                     <!-- 标题 -->
                     <header class="mb-3">
-                        <div class="h3 text-info text-break mb-3">{{post.title}}</div>
-                        <div class="mb-3">
-                            info1、info2
-                        </div>
+                        <div class="h1 text-info text-break mb-3">{{post.title}}</div>
+                        <ul class="mb-3 d-sm-flex list-inline text-secondary">
+                            <li class="list-inline-item">{{post.author.username||post.author.name}}</li>
+                            <li class="list-inline-item">/</li>
+                            <li class="list-inline-item"><i class="fa fa-clock-o mr-1"></i>{{$moment(post.timestamp).format('YYYY/MM/DD HH:mm:ss')}}</li>
+                            <li class="list-inline-item">/</li>
+                            <li class="list-inline-item">Comment(0)</li>
+                            <li class="list-inline-item ml-auto">
+                                <i class="fa fa-eye text-muted mr-1"></i>{{post.views}}次阅读
+                            </li>
+                            
+                        </ul>
                         <hr>
                     </header>
                     <vue-markdown
@@ -43,12 +51,27 @@
 import store from '../store.js'
 import VueMarkdown from 'vue-markdown'
 import '../assets/jquery.sticky'
-
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
+const highlightCode = () => {
+  let blocks = document.querySelectorAll('pre code');
+  blocks.forEach((block)=>{
+    hljs.highlightBlock(block)
+  })
+}
 export default {
     data(){
         return {
             sharestate:store.state,
-            post: {}
+            post: {
+                author:{
+                    username:''
+                },
+                body:'',
+                summary:'',
+                title:'',
+                views:0
+            }
         }
     },
     components:{
@@ -77,6 +100,12 @@ export default {
     beforeRouteUpdate(to,from,next){
         this._getPost(to.params.id)
         next()
+    },
+    mounted () {
+        highlightCode()
+    },
+    updated () {
+        highlightCode()
     }
 }
 </script>

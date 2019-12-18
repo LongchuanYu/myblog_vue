@@ -36,6 +36,8 @@
         </div>
     </div>
     </div><!-- End Modal -->
+
+
     <button @click="onClick">{{show}}</button>
 
     
@@ -44,6 +46,7 @@
 </div>
 </template>
 <script>
+
 export default {
     name:'edit-post-modal',
     model:{
@@ -51,6 +54,7 @@ export default {
         event:'clicka'
     },
     props:{
+        formType:String,
         editForm:Object,
         show:Boolean
     },
@@ -71,16 +75,21 @@ export default {
     watch:{
         show:function(val,oldVal){
             if(val){
-                console.log("pop up!!!")
-            }else{
-                console.log("closed...")
+                $("#exampleModal").modal('show')
             }
         }
     },
     methods:{
         onClick(){
-            this.
+            this.$emit('clicka',!this.show)
         }
+    },
+    mounted:function(){
+        let that=this;
+        $('#exampleModal').on('hide.bs.modal', function (e) {
+            that.$emit('clicka',false)
+        // do something...
+        })
     }
 
 }

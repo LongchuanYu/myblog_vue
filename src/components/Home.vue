@@ -24,8 +24,8 @@
                     <div class="invalid-feedback">{{editForm.bodyError}}</div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit_modal_cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="edit_modal_update">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
 
                 </form>
@@ -33,7 +33,8 @@
 
             </div>
         </div>
-        </div>
+        </div><!-- End Modal -->
+        
 
 
 
@@ -102,7 +103,7 @@
                             <!-- 操作栏 -->
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="">
-                                    <i class="fa fa-eye text-muted mr-1"></i><small>1111</small>
+                                    <i class="fa fa-eye text-muted mr-1"></i><small>{{post.views}}</small>
                                 </div>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#exampleModal" @click="onEditPost(post)">编辑</button>
@@ -157,6 +158,7 @@ import store from '../store.js'
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.js'
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.zh.js'
 import '../assets/bootstrap-markdown/js/marked.js'
+
 export default {
     name:'Home',
     //组件包含组件

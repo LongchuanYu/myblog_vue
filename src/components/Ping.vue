@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <button @click="onClick">parent</button>
-        <edit-post-modal  v-model="show" @clicka="onClicka"/>
+        <button @click="onClick">parent:{{show}}</button>
+        <edit-post-modal  v-model="show" @clicka="(val)=>{show=val}"/>
     </div>
 </template>
 
@@ -32,10 +32,6 @@ export default {
         EditPostModal
     },
     methods:{
-        onClicka(newVal){
-            this.show = newVal
-            
-        },
         onClick(){
             this.show = !this.show
         }
