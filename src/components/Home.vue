@@ -23,12 +23,14 @@
                     <textarea v-model="editForm.body" id="edit_body" rows="5" class="form-control"></textarea>
                     <div class="invalid-feedback">{{editForm.bodyError}}</div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit_modal_cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="edit_modal_update">Update</button>
+                </div>
+
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Update</button>
-            </div>
+
             </div>
         </div>
         </div>
@@ -192,9 +194,11 @@ export default {
     methods:{
         //编辑按钮按下
         onEditPost(post){
-            this.editForm.title = post.title
-            this.editForm.summary = post.summary
-            this.editForm.body = post.body
+            // （？）如何把postForm（也就是post）赋值到editForm上
+            //  答：用asign啊！！！
+            this._tearDownFormError('editForm')
+            this.editForm = Object.assign(this.editForm,post)
+            console.log(this.editForm)
             $("#edit_body").markdown({
                 autofocus:false,
                 savable:false,
@@ -202,9 +206,66 @@ export default {
                 language: 'zh'
             })
         },
+        //提交update
+        onSubmitUpdate(){
+            this._tearDownFormError('editForm')
+            const {title,summary,body,id}  = this.editForm
+            let path = `/posts/${id}`
+            if($.trim(title)=='' || !this.editForm.title){
+                this.editForm.errors+=1
+                this.editForm.titleError='Please input your title.'
+            }
+            if($.trim(body)=='' || !this.editForm.body){
+                this.editForm.errors+=1
+                this.editForm.bodyError='Please input your article.'
+                $("#edit_body").parent(".md-editor").addClass("is-invalid")
+            }else{
+                 $("#edit_body").parent(".md-editor").removeClass("is-invalid")
+            }
+            if(this.editForm.errors){
+                return
+            }
+            let payload = {
+                title:title,
+                summary:summary,
+                body:body,
+                id:id
+            }
+            this.$axios.put(path,payload).then(res=>{
+                //（？）如何关闭模态框？
+                //  答：参考bootstrap文档
+                $('#exampleModal').modal('hide')
+                this.$toasted.success("修改成功")
+                this._getPosts()
+            }).catch(e=>{
+                console.log(e)
+
+            })
+
+        },
         onSubmitAdd(){
             this._putPosts()
-
+        },
+        _tearDownFormError(witchform){
+            switch(witchform){
+                case 'editForm':
+                    this.editForm.errors=0
+                    this.editForm.titleError=''
+                    this.editForm.bodyError=''
+                    break;
+                case 'postForm':
+                    this.postForm.errors=0
+                    this.postForm.titleError=''
+                    this.postForm.bodyError=''
+                    break;
+                case 'All':
+                    this.editForm.errors=0
+                    this.editForm.titleError=''
+                    this.editForm.bodyError=''
+                    this.postForm.errors=0
+                    this.postForm.titleError=''
+                    this.postForm.bodyError=''
+            }
         },
         _putPosts(){
             this.postForm.errors=0
@@ -219,9 +280,9 @@ export default {
             if($.trim(body)=='' || !this.postForm.body){
                 this.postForm.errors+=1
                 this.postForm.bodyError='Please input your article.'
-                $(".md-editor").addClass("is-invalid")
+                $("#post_body").parent(".md-editor").addClass("is-invalid")
             }else{
-                 $(".md-editor").removeClass("is-invalid")
+                 $("#post_body").parent(".md-editor").removeClass("is-invalid")
             }
             if(this.postForm.errors){
                 return
