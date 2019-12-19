@@ -10,28 +10,30 @@ axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     
     const token = window.localStorage.getItem('madblog-token')
-    console.log('request ok..')
+    // console.log('request ok..')
     if(token){
         config.headers.Authorization = `Bearer ${token}`
     }
     return config
   }, function (error) {
-      console.log('request error...')
+    //   console.log('request error...')
     // Do something with request error
     return Promise.reject(error)
   })
 
 axios.interceptors.response.use(function(response){
-    console.log('response ok...')
+    // console.log('response ok...')
     return response
 },function(error){
-    console.log('response error...'+error.response.status)
     switch (error.response.status){
         case 401:
             store.logoutAction()
             Vue.toasted.error('401:Authorization error')
             if (router.currentRoute.path !=='/login'){
-                
+                //Home页面删除或者更新操作，如果没有登录认证，会跳转到登陆界面，这时候模态框蒙版会遮住登录界面
+                //流程是 request - request拦截 - response拦截 - 模态框response Catch Error 。。
+                $('#exampleModal').modal('hide')
+                $("#modalDelete").modal("hide")
                 router.replace({
                     path:'/login',
                     query:{redirect: router.currentRoute.path}

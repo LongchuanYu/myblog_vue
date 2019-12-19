@@ -14,10 +14,7 @@ const router = new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home,
-      meta: {
-        requiresAuth: true
-      }
+      component: Home
     },
     {
       path: '/login',
@@ -53,6 +50,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  if(to.matched.length===0){
+    Vue.toasted.error("未匹配路由...")
+    router.back()
+    return;
+  }
   const token = window.localStorage.getItem('madblog-token')
   //（？）some如何理解？
   //  es6的some方法，有一个true则返回true。相应的every方法，全部true才返回true

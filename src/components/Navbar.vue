@@ -3,7 +3,7 @@
     <div class="container">
         <router-link to="/" class="navbar-brand">
             <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            MadBlog
+            Blog
         </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -20,9 +20,9 @@
             </ul>
 
             <form class="form-inline navbar-left mr-auto">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" disabled>
             <!-- 暂时先禁止提交，后续实现搜索再改回 type="submit" -->
-            <button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" disabled>Search</button>
             </form>
 
             <ul class="nav navbar-nav navbar-right">          

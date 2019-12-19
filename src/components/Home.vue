@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <!-- --------------------Modal------------------------ -->
+        <!-- --------------------Modal Edit------------------------ -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -33,35 +33,36 @@
 
             </div>
         </div>
-        </div><!-- End Modal -->
-        
+        </div><!-- End Modal Edit -->
 
 
-
-
-
-        <!-- ---------------------新增post--------------------- -->
-        <!-- 
-            （？）.prevent有什么作用? 
-                答：阻止默认的表单提交，这里用自己的方法onSubmitAdd来提交表单
-        -->
-        <form v-if="sharestate.is_authenticated" @submit.prevent="onSubmitAdd" class = "mb-4">
-            <div class="form-group">
-                <input type="text" v-model="postForm.title" v-bind:class="{'form-control':true,'is-invalid':postForm.titleError }" id="post_title" placeholder="标题" required>
-                <div class="invalid-feedback">{{postForm.titleError}}</div>
+        <!-- Modal Delete -->
+        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDeleteLabel">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <input type="text" v-model="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">
+            <div class="modal-body">
+                Are you sure？
             </div>
-            <div class="form-group">
-                <textarea v-model="postForm.body" id="post_body" rows="5" class="form-control"></textarea>
-                <div class="invalid-feedback">{{postForm.bodyError}}</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" @click="onDeletePost">Yes</button>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+            </div>
+        </div>
+        </div><!-- End Modal Delete -->
+
+
+
+       
 
         <!-- ---------------Card-------------- -->
-        <div class="card border-0 mb-4">
+        <div class="card border-0 mb-5">
             <!-- 列表头部 -->
             <div class="card-header d-flex align-items-center justify-content-between bg-light border-0 mb-3">
                 <div class="float-left"> <!-- posts总览 -->
@@ -106,8 +107,18 @@
                                     <i class="fa fa-eye text-muted mr-1"></i><small>{{post.views}}</small>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#exampleModal" @click="onEditPost(post)">编辑</button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm">删除</button>
+                                    <button type="button" 
+                                        class="btn btn-outline-secondary btn-sm" 
+                                        data-toggle="modal" 
+                                        data-target="#exampleModal"
+                                        :disabled="sharestate.user_id == post.author.id? false:true"
+                                        @click="onEditPost(post)">编辑</button>
+                                    <button type="button" 
+                                        class="btn btn-outline-secondary btn-sm" 
+                                        data-toggle="modal" 
+                                        data-target="#modalDelete" 
+                                        :disabled="sharestate.user_id == post.author.id? false:true"
+                                        @click="delPostid = post.id">删除</button>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +146,9 @@
                             2.如果是从主页进入（即没有路由query），并且页码是1的按钮亮起来。
                      -->
                     <li v-bind:class="{'page-item':1,'active':$route.query.page==page || (!$route.query.page && page==1)}" v-for="(page,index) in iter_pages" v-bind:key="index">
-                        <router-link :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}" class="page-link">{{page}}</router-link>
+                        
+                        <router-link v-if="page!='NaN'" :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}" class="page-link">{{page}}</router-link>
+                        <span class="list-inline-item h-100 ml-2 mr-2 text-secondary" v-else style="line-height:3.5em;">...</span>
                         
                     </li>
 
@@ -150,6 +163,30 @@
                 </ul>
             </nav>
         </div> <!--card 结束-->
+
+
+        <!-- ---------------------新增post--------------------- -->
+        <!-- 
+            （？）.prevent有什么作用? 
+                答：阻止默认的表单提交，这里用自己的方法onSubmitAdd来提交表单
+        -->
+        <div class="mb-4 border-bottom ">
+            <div class="h5 d-inline-block">发表文章</div>
+        </div>
+        <form v-if="sharestate.is_authenticated" @submit.prevent="onSubmitAdd" class = "mb-4">
+            <div class="form-group">
+                <input type="text" v-model="postForm.title" v-bind:class="{'form-control':true,'is-invalid':postForm.titleError }" id="post_title" placeholder="标题" required>
+                <div class="invalid-feedback">{{postForm.titleError}}</div>
+            </div>
+            <div class="form-group">
+                <input type="text" v-model="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">
+            </div>
+            <div class="form-group">
+                <textarea v-model="postForm.body" id="post_body" rows="5" class="form-control"></textarea>
+                <div class="invalid-feedback">{{postForm.bodyError}}</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div> <!--Container结束-->
 </template>
 
@@ -175,6 +212,7 @@ export default {
                 }
             },
             iter_pages:[], //Pagination
+            delPostid:'',
             postForm:{
                 title:'',
                 summary:'',
@@ -200,7 +238,6 @@ export default {
             //  答：用asign啊！！！
             this._tearDownFormError('editForm')
             this.editForm = Object.assign(this.editForm,post)
-            console.log(this.editForm)
             $("#edit_body").markdown({
                 autofocus:false,
                 savable:false,
@@ -240,11 +277,31 @@ export default {
                 this.$toasted.success("修改成功")
                 this._getPosts()
             }).catch(e=>{
-                console.log(e)
+                this.$toasted.error("修改失败")
 
             })
 
         },
+        //modal删除按钮按下
+        onDeletePost(){
+            if(!this.delPostid){
+                this.$toasted.success("Ooooh No !")
+                return
+            }
+            let path = `/posts/${this.delPostid}`
+            this.$axios.delete(path).then(res=>{
+                this.$toasted.success("删除成功")
+                $("#modalDelete").modal("hide")
+                this._getPosts()
+            }).catch(e=>{
+                this.$toasted.error("删除失败")
+                $("#modalDelete").modal("hide")
+                console.log(e)
+            })
+
+
+        },
+        //新增按钮按下
         onSubmitAdd(){
             this._putPosts()
         },
@@ -374,9 +431,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-a:hover{
-    text-decoration: none;
-}
-</style>
