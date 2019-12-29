@@ -34,8 +34,8 @@
 
 <script>
 import axios from 'axios'
-import Alert from './Alert'
-import store from '../store.js'
+import Alert from '../../Base/Alert'
+import store from '../../../store.js'
 
 export default {
   name: 'Login',  //this is the name of the component
@@ -91,7 +91,6 @@ export default {
       }).then((response) => {          
           // handle success
           window.localStorage.setItem('madblog-token', response.data.token)
-          store.resetNotNewAction()
           store.loginAction()
           if (typeof this.$route.query.redirect == 'undefined') {
             this.$router.push('/')

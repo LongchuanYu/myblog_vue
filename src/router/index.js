@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Register from '@/components/Register'
-import Login from '@/components/Login'
+import Register from '@/components/User/Auth/Register'
+import Login from '@/components/User/Auth/Login'
 import Ping from '@/components/Ping'
-import Profile from '@/components/Profile'
-import EditProfile from '@/components/EditProfile'
-import Post from '@/components/Post'
+import Profile from '@/components/User/Settings/Profile'
+import User from '@/components/User/User'
+import EditProfile from '@/components/User/Settings/EditProfile'
+import Post from '@/components/Base/Post'
+
+//子路由
+import Followers from '@/components/User/Followers'
+import Following from '@/components/User/Following'
+import Overview from '@/components/User/Overview'
 Vue.use(Router)
 
 const router = new Router({
@@ -32,8 +38,13 @@ const router = new Router({
       component: Ping
     },{
       path:'/user/:id',
-      name:'Profile',
-      component:Profile,
+      children:[
+        {path:'',component:Overview},
+        { path: 'overview', name: 'UserOverview', component: Overview },
+        {path:'followers',name:'UserFollowers',component:Followers},
+        {path:'following',name:'UserFollowing',component:Following}
+      ],
+      component:User,
       meta:{
         requiresAuth:true
       }

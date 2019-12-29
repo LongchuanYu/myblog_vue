@@ -31,7 +31,6 @@
 
 <script>
 import axios from 'axios'
-import store from '../store.js'
 export default {
   name:'Register',
   data(){
@@ -89,7 +88,6 @@ export default {
       this.$axios.post(path, payload)
         .then((response) => {
           // handle success
-          store.setNewAction()
           this.$router.push('/login')
         })
         .catch((error) => {

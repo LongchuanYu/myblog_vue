@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <button @click="onClick">parent:{{show}}</button>
-        <edit-post-modal  v-model="show" @clicka="(val)=>{show=val}"/>
+        <!-- <button @click="onClick">parent:{{show}}</button> -->
+        <!-- <edit-post-modal  v-model="show" @clicka="(val)=>{show=val}"/> -->
     </div>
 </template>
 
 <script>
 import store from '../store.js'
-import EditPostModal from './EditPostModal'
+// import EditPostModal from './User/Settings/EditPostModal'
 export default {
     // import的时候用name的值
     name:'Ping',
@@ -29,7 +29,7 @@ export default {
         }
     },
     components:{
-        EditPostModal
+        
     },
     methods:{
         onClick(){

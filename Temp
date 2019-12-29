@@ -1,0 +1,67 @@
+                <!-- 个人资料 -->
+                <div class="col-sm-9">
+                    
+                    <!-- username -->
+                    <div class="d-flex align-items-center justify-content-sm-between">
+                        <h2 class="mb-3 font-weight-normal">{{user.username||user.name}}</h2>
+                    </div>
+                    <!-- Member since -->
+                    <h6 class="mb-3 font-weight-normal">
+                        <i class="fa fa-user-o mr-2"></i>Member since：{{user.member_since ? $moment(user.member_since).format("YYYY-MM-DD HH:mm") : ""}}
+                    </h6>
+                    <h6 class="mb-3 font-weight-normal">
+                        <i class="fa fa-clock-o mr-2"></i>Last seen：{{user.last_seen ? $moment(user.last_seen).fromNow():""}}</h6>
+                    <h6 class="mb-3 font-weight-normal">
+                        <i class="fa fa-address-card-o mr-2"></i>verified User：{{user.email}}
+                    </h6>
+                    <h6 class="mb-3 font-weight-normal"><i class="fa fa-map-marker mr-2"></i>{{user.location}}</h6>
+
+                    <hr>
+                    <!-- about me -->
+                    <p class="lead">{{ user.about_me }}</p>
+                </div>
+								
+								
+								
+{name:'User',params:{id:shareState.user_id}}
+
+
+
+
+          <!-- -------------Pagination-------------- -->
+            <nav>
+                <ul class="pagination">
+                    <!-- 
+                        （？）如何实现到达第一页时，上一页按钮灰掉 
+                            答：'disabled':posts._meta.page<=1?true:false
+                                注意一定要用三元运算符指定true或者false，只写<=1是不对的
+                    -->
+                    <li v-bind:class="{'page-item':true,'disabled':posts._meta.page<=1?true:false}">
+                        <router-link 
+                        :to="{name:'Home',query:{page:posts._meta.page-1 , per_page:posts._meta.per_page}}" 
+                        class="page-link" >
+                            &laquo;
+                        </router-link>
+                    </li>
+                    <!-- 
+                        （？）分页怎么让点击的页码突出色显示？
+                            1.路由的page（点击的）和当前page（显示的）比较
+                            2.如果是从主页进入（即没有路由query），并且页码是1的按钮亮起来。
+                     -->
+                    <li v-bind:class="{'page-item':1,'active':$route.query.page==page || (!$route.query.page && page==1)}" v-for="(page,index) in iter_pages" v-bind:key="index">
+                        
+                        <router-link v-if="page!='NaN'" :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}" class="page-link">{{page}}</router-link>
+                        <span class="list-inline-item h-100 ml-2 mr-2 text-secondary" v-else style="line-height:3.5em;">...</span>
+                        
+                    </li>
+
+
+                    <li v-bind:class="{'page-item':true,'disabled':posts._meta.page>=posts._meta.total_pages?true:false}">
+                        <router-link 
+                        :to="{name:'Home',query:{page:posts._meta.page+1 , per_page:posts._meta.per_page}}" 
+                        class="page-link" >
+                            &raquo;
+                        </router-link>
+                    </li>
+                </ul>
+            </nav>

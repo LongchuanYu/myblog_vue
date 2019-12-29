@@ -94,7 +94,7 @@
                                 -->
                                 <div class="d-inline-block  text-truncate" >
                                     <small>{{$moment(post.timestamp).fromNow()}} /</small>
-                                    <router-link :to="{name:'Profile',params:{id:post.author.id}}"><small>{{post.author.username||post.author.name}}</small></router-link>
+                                    <router-link :to="{path:`user/${post.author.id}`}"><small>{{post.author.username||post.author.name}}</small></router-link>
                                 </div>
                             </div>
                             <!-- 文章summary -->
@@ -124,44 +124,14 @@
                         </div>
             </div> <!-- card body结束 -->
             </div>
-
-            <!-- -------------Pagination-------------- -->
-            <nav>
-                <ul class="pagination">
-                    <!-- 
-                        （？）如何实现到达第一页时，上一页按钮灰掉 
-                            答：'disabled':posts._meta.page<=1?true:false
-                                注意一定要用三元运算符指定true或者false，只写<=1是不对的
-                    -->
-                    <li v-bind:class="{'page-item':true,'disabled':posts._meta.page<=1?true:false}">
-                        <router-link 
-                        :to="{name:'Home',query:{page:posts._meta.page-1 , per_page:posts._meta.per_page}}" 
-                        class="page-link" >
-                            &laquo;
-                        </router-link>
-                    </li>
-                    <!-- 
-                        （？）分页怎么让点击的页码突出色显示？
-                            1.路由的page（点击的）和当前page（显示的）比较
-                            2.如果是从主页进入（即没有路由query），并且页码是1的按钮亮起来。
-                     -->
-                    <li v-bind:class="{'page-item':1,'active':$route.query.page==page || (!$route.query.page && page==1)}" v-for="(page,index) in iter_pages" v-bind:key="index">
-                        
-                        <router-link v-if="page!='NaN'" :to="{name:'Home',query:{page:page,per_page:posts._meta.per_page}}" class="page-link">{{page}}</router-link>
-                        <span class="list-inline-item h-100 ml-2 mr-2 text-secondary" v-else style="line-height:3.5em;">...</span>
-                        
-                    </li>
-
-
-                    <li v-bind:class="{'page-item':true,'disabled':posts._meta.page>=posts._meta.total_pages?true:false}">
-                        <router-link 
-                        :to="{name:'Home',query:{page:posts._meta.page+1 , per_page:posts._meta.per_page}}" 
-                        class="page-link" >
-                            &raquo;
-                        </router-link>
-                    </li>
-                </ul>
-            </nav>
+            <!-- Pagination -->
+            <pagination
+                :curPage="posts._meta.page"
+                :perPage="posts._meta.per_page"
+                :totalPage="posts._meta.total_pages"
+            >
+            </pagination>
+  
         </div> <!--card 结束-->
 
 
@@ -195,12 +165,12 @@ import store from '../store.js'
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.js'
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.zh.js'
 import '../assets/bootstrap-markdown/js/marked.js'
-
+import Pagination from './Base/Pagination'
 export default {
     name:'Home',
     //组件包含组件
     components:{ 
-        
+        'pagination':Pagination
     },
     data(){
         return {
@@ -211,7 +181,6 @@ export default {
                     per_page:10
                 }
             },
-            iter_pages:[], //Pagination
             delPostid:'',
             postForm:{
                 title:'',
@@ -389,20 +358,6 @@ export default {
             }).then(res=>{
                 console.log(res)         
                 this.posts = res.data
-                let c = this.posts._meta.page
-                let arr = [1,c-2,c-1,  c  ,c+1,c+2,this.posts._meta.total_pages] //7 ittems
-                arr = arr.filter(item=>{
-                    return item>0 && item<=this.posts._meta.total_pages
-                })
-                arr = [...new Set(arr)]
-                if(arr.length>1 && arr[0]+1 != arr[1]){
-                    arr.splice(1,0,'NaN')
-                }
-                if (arr.length>1 && arr[arr.length-1]-1 != arr[arr.length-2]){
-                    arr.splice(arr.length-1,0,"NaN")
-                }
-                this.iter_pages = arr
-
             }).catch(e=>{
                 console.log(e)
             })

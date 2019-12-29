@@ -9,33 +9,44 @@
                     <div class='avatar pb-3'>
                         <img :src="user._links.avatar" alt="" class="rounded img-fluid w-100" >
                     </div>
+
                     <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
+                        <button type="button" class="btn btn-outline-primary w-100 mb-2">Settings</button>
+                    </router-link>
+                    <button type="button" class="btn btn-outline-danger w-100 mb-5">Delete Account</button>
+                    <!-- <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-5">Edit profile</button>
                     </router-link>
-                    <button v-else type="button" class="btn btn-outline-secondary w-100 mb-5 disabled custom-btn">Edit profile</button>
+                    <button v-else type="button" class="btn btn-outline-secondary w-100 mb-5 disabled custom-btn">Edit profile</button> -->
                     
                 </div>
 
                 <!-- 个人资料 -->
                 <div class="col-sm-9">
-                    <!-- username -->
-                    <div class="d-flex align-items-center justify-content-sm-between">
-                        <h2 class="mb-3 font-weight-normal">{{user.username||user.name}}</h2>
-                    </div>
-                    <!-- Member since -->
-                    <h6 class="mb-3 font-weight-normal">
-                        <i class="fa fa-user-o mr-2"></i>Member since：{{user.member_since ? $moment(user.member_since).format("YYYY-MM-DD HH:mm") : ""}}
-                    </h6>
-                    <h6 class="mb-3 font-weight-normal">
-                        <i class="fa fa-clock-o mr-2"></i>Last seen：{{user.last_seen ? $moment(user.last_seen).fromNow():""}}</h6>
-                    <h6 class="mb-3 font-weight-normal">
-                        <i class="fa fa-address-card-o mr-2"></i>verified User：{{user.email}}
-                    </h6>
-                    <h6 class="mb-3 font-weight-normal"><i class="fa fa-map-marker mr-2"></i>{{user.location}}</h6>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <!-- 
+                                （？）v-bind:active-class怎么理解？
+                                答：这里的tab切换需要在class上添加“active”标签，这里使用vue-router的active-class设置链接激活时使用的 CSS 类名，详见文档
+                                否则单纯的tab切换，a标签不会变色，导致切换效果不好。也无法动态响应url的变化，当url变化时tab不会跟着切换。。。
+                             -->
+                            <router-link :to="{name:'UserOverview'}"  v-bind:active-class="'active'" class="nav-link" href="#"  v-bind:class="isUserOverView">个人资料</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="{name:'UserFollowers'}" v-bind:active-class="'active'" class="nav-link" href="#" >粉丝<span class="badge badge-pill badge-danger ml-1">{{user.followers_count}}</span></router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="{name:'UserFollowing'}" v-bind:active-class="'active'" class="nav-link" href="#" >关注<span class="badge badge-pill badge-danger ml-1">{{user.followeds_count}}</span></router-link>
+                        </li>
 
-                    <hr>
-                    <!-- about me -->
-                    <p class="lead">{{ user.about_me }}</p>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"  v-bind:active-class="'active'">我的文章<span class="badge badge-pill badge-danger ml-1">4</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-bind:active-class="'active'" >关注文章<span class="badge badge-pill badge-danger ml-1">4</span></a>
+                        </li>
+                    </ul>
+                    <router-view></router-view>
                 </div>
             </div>
         </div>
@@ -44,7 +55,7 @@
 </template>
 
 <script>
-import store from '../store.js'
+import store from '../../store.js'
 export default {
     data(){
         return {
@@ -58,11 +69,25 @@ export default {
                 'about_me': '',
                 'member_since': '', 
                 'last_seen':'',
+                'followeds_count':0,
+                'followers_count':0,
+                'posts_count':0,
+                'followed_posts_count':0,
                 '_links': {
                     'self': '',
                     'avatar': ''
                 }
             }
+        }
+    },
+    computed: {
+        isUserOverView: function () {
+        const tabs = ['UserFollowers', 'UserFollowing', 'UserPostsList', 'UserFollowedsPostsList']
+        if (tabs.indexOf(this.$route.name) == -1) {
+            return 'active'
+        } else {
+            return ''
+        }
         }
     },
     methods:{
@@ -96,8 +121,10 @@ export default {
         this.getUser(userid)
     },
     beforeRouteUpdate(to,from,next){
+        
         this.getUser(to.params.id)
         next()
+        
     }
 }
 </script>
@@ -113,4 +140,5 @@ export default {
     -webkit-box-shadow:0 0 0 0;
     box-shadow:0 0 0 0;
 }
+
 </style>

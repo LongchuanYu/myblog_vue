@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import store from '../store.js'
+import store from '../../store.js'
 import VueMarkdown from 'vue-markdown'
-import '../assets/jquery.sticky'
+import '../../assets/jquery.sticky'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 const highlightCode = () => {
