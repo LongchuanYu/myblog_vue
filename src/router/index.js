@@ -4,9 +4,8 @@ import Home from '@/components/Home'
 import Register from '@/components/User/Auth/Register'
 import Login from '@/components/User/Auth/Login'
 import Ping from '@/components/Ping'
-import Profile from '@/components/User/Settings/Profile'
 import User from '@/components/User/User'
-import EditProfile from '@/components/User/Settings/EditProfile'
+
 import PostDetail from '@/components//PostDetail'
 
 //子路由
@@ -14,6 +13,13 @@ import Followers from '@/components/User/Followers'
 import Following from '@/components/User/Following'
 import Overview from '@/components/User/Overview'
 import UserPostsList from '@/components/Post/UserPostsList'
+
+//子路由2
+import Settings from '@/components/User/Settings/Settings'
+import Profile from '@/components/User/Settings/Profile'
+import Account from '@/components/User/Settings/Account'
+import Email from '@/components/User/Settings/Email'
+import Notiffication from '@/components/User/Settings/Notiffication'
 Vue.use(Router)
 
 const router = new Router({
@@ -41,7 +47,7 @@ const router = new Router({
       path:'/user/:id',
       children:[
         {path:'',component:Overview},
-        { path: 'overview', name: 'UserOverview', component: Overview },
+        {path: 'overview', name: 'UserOverview', component: Overview },
         {path:'followers',name:'UserFollowers',component:Followers},
         {path:'following',name:'UserFollowing',component:Following},
         {path:'UserPostsList',name:'UserPostsList',component:UserPostsList}
@@ -55,9 +61,15 @@ const router = new Router({
       name:'PostDetail',
       component:PostDetail
     },{
-      path:'/edit/:id',
-      name:'EditProfile',
-      component:EditProfile
+      path:'/settings',
+      component:Settings,
+      children:[
+        {path:'',component:Profile},
+        {path:'profile',name:'Profile',component:Profile},
+        {path:'account',name:'Account',component:Account},
+        {path:'email',name:'Email',component:Email},
+        {path:'notiffication',name:'Notiffication',component:Notiffication}
+      ]
     }
   ]
 })

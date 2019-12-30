@@ -1,10 +1,8 @@
 <template>
     <div>
-        Profile
-
+        Notiffication
     </div>
 </template>
-
 <script>
 export default {
     

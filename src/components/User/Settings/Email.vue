@@ -1,10 +1,8 @@
 <template>
     <div>
-        Profile
-
+        Email
     </div>
 </template>
-
 <script>
 export default {
     

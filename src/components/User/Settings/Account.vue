@@ -1,10 +1,9 @@
 <template>
-    <div>
-        Profile
+<div>
+    Account
+</div>
 
-    </div>
 </template>
-
 <script>
 export default {
     

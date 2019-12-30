@@ -13,7 +13,9 @@
                     -->
                     <div class="d-inline-block  text-truncate" >
                         <small>{{$moment(post.timestamp).fromNow()}} /</small>
-                        <router-link :to="{path:`user/${post.author.id}`}"><small>{{post.author.username||post.author.name}}</small></router-link>
+                        <router-link :to="{path:`/user/${post.author.id}`}">
+                            <small>{{post.author.username||post.author.name}}</small>
+                        </router-link>
                     </div>
                 </div>
                 <!-- 文章summary -->
