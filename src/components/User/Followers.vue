@@ -4,7 +4,7 @@
         <div class="card-header d-flex align-items-center justify-content-between bg-light border-0 mb-3">
             <div class="float-left"> <!-- posts总览 -->
                 <i class="fa fa-commenting-o"></i>
-                All Posts<small class="font-weight-normal">（共1篇，1页）</small>
+                All Posts<small class="font-weight-normal">（共{{followers?followers._meta.total_items:''}}个，{{followers?followers._meta.total_pages:''}}页）</small>
             </div>
             <div class="dropdown"> <!-- 其他选择，弹出选项 -->
                 <div class="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,7 +19,8 @@
         <member
             v-for="(follower,index) in followers.items" :key="index"
             :member="follower"
-            
+            @follow-user="onFollowUser(follower)"
+            @unfollow-user="onUnfolloweUser(follower)"
         ></member>
     </div>
 </template>
@@ -37,10 +38,25 @@ export default {
         'member':Member
     },
     methods:{
+        onFollowUser(follower){
+            const path = `/follow/${follower.id}`
+            this.$axios.get(path).then(res=>{
+                this._getUserFollowers(this.$route.params.id)
+            })
+        },
+        onUnfolloweUser(follower){
+            const path = `/unfollow/${follower.id}`
+            this.$axios.get(path).then(res=>{
+                //（？）这里关注成功以后怎么局部刷新呢？
+                //  答:沙雕了，组件created的时候就是调用_getUserFollowers()方法获取数据的。
+                //  注意这里参数一定要是当前用户的id。
+                this._getUserFollowers(this.$route.params.id)
+            })
+        },
         _getUser(id){
             const path = `/users/${id}`
             this.$axios.get(path).then(res=>{
-                console.log('user: ',res.data)
+                // console.log('user: ',res.data)
                 this.user = res.data
             }).catch(e=>{
                 console.error(e)
@@ -66,7 +82,7 @@ export default {
             this.$axios.get(path,{
                 params:payload
             }).then(res=>{
-                console.log(res)
+                // console.log(res)
                 this.followers = res.data
             }).catch(e=>{
                 console.error(e)

@@ -13,7 +13,18 @@
                     <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-2">Settings</button>
                     </router-link>
-                    <button type="button" class="btn btn-outline-danger w-100 mb-5">Delete Account</button>
+                    <button type="button" class="btn btn-outline-danger w-100 mb-5" v-if="sharestate.user_id == $route.params.id">Delete Account</button>
+                    <button type="button" 
+                        class="btn btn-outline-primary w-100 mb-5" 
+                        v-if="sharestate.user_id != $route.params.id && user.is_following" 
+                        @click="onUnfollowUser($route.params.id)">取消关注
+                    </button>
+                    <button type="button" 
+                        class="btn btn-outline-primary w-100 mb-5" 
+                        v-else-if="sharestate.user_id != $route.params.id && !user.is_following" 
+                        @click="onFollowUser($route.params.id)">关注
+                    </button>
+
                     <!-- <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-5">Edit profile</button>
                     </router-link>
@@ -30,20 +41,30 @@
                                 答：这里的tab切换需要在class上添加“active”标签，这里使用vue-router的active-class设置链接激活时使用的 CSS 类名，详见文档
                                 否则单纯的tab切换，a标签不会变色，导致切换效果不好。也无法动态响应url的变化，当url变化时tab不会跟着切换。。。
                              -->
-                            <router-link :to="{name:'UserOverview'}"  v-bind:active-class="'active'" class="nav-link" href="#"  v-bind:class="isUserOverView">个人资料</router-link>
+                            <router-link :to="{name:'UserOverview'}"  v-bind:active-class="'active'" class="nav-link" href="#"  v-bind:class="isUserOverView">
+                                个人资料
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{name:'UserFollowers'}" v-bind:active-class="'active'" class="nav-link" href="#" >粉丝<span class="badge badge-pill badge-danger ml-1">{{user.followers_count}}</span></router-link>
+                            <router-link :to="{name:'UserFollowers'}" v-bind:active-class="'active'" class="nav-link" href="#" >
+                                粉丝<span class="badge badge-pill badge-danger ml-1">{{user.followers_count}}</span>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{name:'UserFollowing'}" v-bind:active-class="'active'" class="nav-link" href="#" >关注<span class="badge badge-pill badge-danger ml-1">{{user.followeds_count}}</span></router-link>
+                            <router-link :to="{name:'UserFollowing'}" v-bind:active-class="'active'" class="nav-link" href="#" >
+                                关注<span class="badge badge-pill badge-danger ml-1">{{user.followeds_count}}</span>
+                            </router-link>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#"  v-bind:active-class="'active'">我的文章<span class="badge badge-pill badge-danger ml-1">4</span></a>
+                            <router-link :to="{name:'UserPostsList'}" class="nav-link" href="#"  v-bind:active-class="'active'">
+                                我的文章<span class="badge badge-pill badge-danger ml-1">{{user.posts_count}}</span>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" v-bind:active-class="'active'" >关注文章<span class="badge badge-pill badge-danger ml-1">4</span></a>
+                            <a class="nav-link" href="#" v-bind:active-class="'active'" >
+                                关注文章<span class="badge badge-pill badge-danger ml-1">{{user.followed_posts_count}}</span>
+                            </a>
                         </li>
                     </ul>
                     <router-view></router-view>
@@ -82,15 +103,33 @@ export default {
     },
     computed: {
         isUserOverView: function () {
-        const tabs = ['UserFollowers', 'UserFollowing', 'UserPostsList', 'UserFollowedsPostsList']
-        if (tabs.indexOf(this.$route.name) == -1) {
-            return 'active'
-        } else {
-            return ''
-        }
+            const tabs = ['UserFollowers', 'UserFollowing', 'UserPostsList', 'UserFollowedsPostsList']
+            if (tabs.indexOf(this.$route.name) == -1) {
+                return 'active'
+            } else {
+                return ''
+            }
         }
     },
     methods:{
+        onFollowUser(id){
+            const path = `/follow/${id}`
+            this.$axios.get(path).then(res=>{
+                console.log('关注ok')
+                this.getUser(id)
+            }).catch(e=>{
+                console.error(e)
+            })
+        },
+        onUnfollowUser(id){
+            const path = `/unfollow/${id}`
+            this.$axios.get(path).then(res=>{
+                console.log('取消ok')
+                this.getUser(id)
+            }).catch(e=>{
+                console.error(e)
+            })
+        },
         getUser(userid){
             //（？）如何实现范围外的userid引发404错误，然后返回原路由？
             //  在全局axios中实现，拦截了response。对于404，route.back()
@@ -102,6 +141,7 @@ export default {
 
             this.$axios.get(`/users/${userid}`)
             .then((res)=>{
+                console.log(res)
                 this.user = res.data
             })
             .catch((e)=>{
@@ -121,9 +161,9 @@ export default {
         this.getUser(userid)
     },
     beforeRouteUpdate(to,from,next){
-        
-        this.getUser(to.params.id)
         next()
+        this.getUser(to.params.id)
+        
         
     }
 }

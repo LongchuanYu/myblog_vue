@@ -1,7 +1,6 @@
 <template>
     <div class="container">
-        <!-- <button @click="onClick">parent:{{show}}</button> -->
-        <!-- <edit-post-modal  v-model="show" @clicka="(val)=>{show=val}"/> -->
+        <button @click="onClick">clickme</button>
     </div>
 </template>
 
@@ -13,27 +12,13 @@ export default {
     name:'Ping',
     data(){
         return {
-            show:false,
-            sharestate:store.state,
-            title:'',
-            textbody:'',
-            editForm:{
-                title:'123',
-                summary:'321',
-                body:'1234567',
-                errors:0,
-                titleError:null,
-                bodyError:null
-            }
 
         }
     },
-    components:{
-        
-    },
     methods:{
         onClick(){
-            this.show = !this.show
+            let test = store.state.test
+            console.log(test)
         }
     }
 }

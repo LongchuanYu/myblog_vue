@@ -7,12 +7,13 @@ import Ping from '@/components/Ping'
 import Profile from '@/components/User/Settings/Profile'
 import User from '@/components/User/User'
 import EditProfile from '@/components/User/Settings/EditProfile'
-import Post from '@/components/Base/Post'
+import PostDetail from '@/components//PostDetail'
 
 //子路由
 import Followers from '@/components/User/Followers'
 import Following from '@/components/User/Following'
 import Overview from '@/components/User/Overview'
+import UserPostsList from '@/components/Post/UserPostsList'
 Vue.use(Router)
 
 const router = new Router({
@@ -42,7 +43,8 @@ const router = new Router({
         {path:'',component:Overview},
         { path: 'overview', name: 'UserOverview', component: Overview },
         {path:'followers',name:'UserFollowers',component:Followers},
-        {path:'following',name:'UserFollowing',component:Following}
+        {path:'following',name:'UserFollowing',component:Following},
+        {path:'UserPostsList',name:'UserPostsList',component:UserPostsList}
       ],
       component:User,
       meta:{
@@ -50,8 +52,8 @@ const router = new Router({
       }
     },{
       path:'/post/:id',
-      name:'Post',
-      component:Post
+      name:'PostDetail',
+      component:PostDetail
     },{
       path:'/edit/:id',
       name:'EditProfile',

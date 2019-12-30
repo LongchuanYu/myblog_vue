@@ -1,131 +1,63 @@
 <template>
     <div class="container">        
-        <div class="row mt-4">
-            <!-- Article Content -->
-            <div class="col-md-9">
-                <article class="">
-                    <!-- 标题 -->
-                    <header class="mb-3">
-                        <div class="h1 text-info text-break mb-3">{{post.title}}</div>
-                        <ul class="mb-3 d-sm-flex list-inline text-secondary">
-                            <li class="list-inline-item">{{post.author.username||post.author.name}}</li>
-                            <li class="list-inline-item">/</li>
-                            <li class="list-inline-item"><i class="fa fa-clock-o mr-1"></i>{{$moment(post.timestamp).format('YYYY/MM/DD HH:mm:ss')}}</li>
-                            <li class="list-inline-item">/</li>
-                            <li class="list-inline-item">Comment(0)</li>
-                            <li class="list-inline-item ml-auto">
-                                <i class="fa fa-eye text-muted mr-1"></i>{{post.views}}次阅读
-                            </li>
-                            
-                        </ul>
-                        <hr>
-                    </header>
-                    <vue-markdown
-                        :source="post.body"
-                        toc
-                        :toc-first-level="1"
-                        :toc-last-level="3"
-                        toc-id="toc"
-                        @toc-rendered="tocAlready"
-                        class="markdown-body text-break text-wrap">
-                    </vue-markdown>
-                </article> 
-            </div>  <!-- End Article Content -->
-
-            <!-- TOC -->
-            <div class="col-md-3">
-                <div id="sticker">
-                    <div id="tocHeader" >
-                        <div class="h5 text-secondary">文章目录</div>
+        <div class="card-body border mb-3 d-flex align-items-start">
+            <div class=""><!-- 头像列 -->
+                <img :src="post.author._links.avatar" alt="" class="d-flex mr-4" style="width:50px">
+            </div>
+            <div class="w-75" style="flex:1;"><!-- 内容列 -->
+                <div class="mb-2 d-flex justify-content-between flex-wrap" ><!-- 标题行 -->
+                    <router-link :to="{name:'PostDetail',params:{id:post.id}}" class="h5 text-truncate w-75">{{post.title}}</router-link>
+                    <!-- 
+                        （？）获取的post表里面只有author_id，怎么获取用户名呢？
+                            1.后端传过来的posts中包含author信息
+                    -->
+                    <div class="d-inline-block  text-truncate" >
+                        <small>{{$moment(post.timestamp).fromNow()}} /</small>
+                        <router-link :to="{path:`user/${post.author.id}`}"><small>{{post.author.username||post.author.name}}</small></router-link>
                     </div>
-                    <div id="toc" class="toc"></div>
-
                 </div>
-            </div><!-- End TOC -->
-            
-        </div>
+                <!-- 文章summary -->
+                <div class="d-block text-wrap overflow-hidden mb-2" style="height:3em">
+                    {{post.summary}}
+                </div>
+                <!-- 操作栏 -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="">
+                        <i class="fa fa-eye text-muted mr-1"></i><small>{{post.views}}</small>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" 
+                            class="btn btn-outline-secondary btn-sm" 
+                            data-toggle="modal" 
+                            data-target="#exampleModal"
+                            :disabled="sharestate.user_id == post.author.id? false:true"
+                            @click="$emit('edit-post')">编辑</button>
+                        <button type="button" 
+                            class="btn btn-outline-secondary btn-sm" 
+                            data-toggle="modal" 
+                            data-target="#modalDelete" 
+                            :disabled="sharestate.user_id == post.author.id? false:true"
+                            @click="$emit('del-post')">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- card body结束 -->
     </div>
 </template>
 
 <script>
-import store from '../../store.js'
+import store from '../../store'
+// 导入 vue-markdown 组件解析 markdown 原文为　HTML
 import VueMarkdown from 'vue-markdown'
-import '../../assets/jquery.sticky'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
-const highlightCode = () => {
-  let blocks = document.querySelectorAll('pre code');
-  blocks.forEach((block)=>{
-    hljs.highlightBlock(block)
-  })
-}
 export default {
-    data(){
-        return {
-            sharestate:store.state,
-            post: {
-                author:{
-                    username:''
-                },
-                body:'',
-                summary:'',
-                title:'',
-                views:0
-            }
-        }
-    },
+    props:['post'],
     components:{
         VueMarkdown
     },
-    methods:{
-        tocAlready(){
-            $("#sticker").sticky({topSpacing:10});
-        },
-        _getPost(postid){
-            
-            let path = `/posts/${postid}`
-            this.$axios.get(path)
-            .then(res=>{
-                this.post = res.data
-                console.log(res)
-            }).catch(e=>{
-                console.log(e)
-                this.$toasted.error("404")
-            })
+    data(){
+        return {
+            sharestate:store.state
         }
-    },
-    created:function(){
-        const postid = this.$route.params.id
-        this._getPost(postid)
-    },
-    beforeRouteUpdate(to,from,next){
-        this._getPost(to.params.id)
-        next()
-    },
-    mounted () {
-        highlightCode()
-    },
-    updated () {
-        highlightCode()
     }
 }
 </script>
-
-<style>
-.toc {
-    font-size: 0.9em;
-}
-.toc ul {
-    list-style-type: none;
-}
-.toc > ul{
-    padding-left: 0;
-}
-.toc > ul > li > ul {
-    padding-left: 1em;
-}
-.toc > ul > li > ul > li > ul {
-    padding-left: 1.2em;    
-}
-
-</style>
