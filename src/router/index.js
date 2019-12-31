@@ -65,10 +65,10 @@ const router = new Router({
       component:Settings,
       children:[
         {path:'',component:Profile},
-        {path:'profile',name:'Profile',component:Profile},
-        {path:'account',name:'Account',component:Account},
-        {path:'email',name:'Email',component:Email},
-        {path:'notiffication',name:'Notiffication',component:Notiffication}
+        {path:'profile',name:'SettingProfile',component:Profile},
+        {path:'account',name:'SettingAccount',component:Account},
+        {path:'email',name:'SettingEmail',component:Email},
+        {path:'notiffication',name:'SettingNotiffication',component:Notiffication}
       ]
     }
   ]

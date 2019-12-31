@@ -10,7 +10,7 @@
                         <img :src="user._links.avatar" alt="" class="rounded img-fluid w-100" >
                     </div>
 
-                    <router-link :to="{path:'/settings'}" v-if="sharestate.user_id == $route.params.id">
+                    <router-link :to="{name:'SettingProfile'}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-2">Settings</button>
                     </router-link>
                     <button type="button" class="btn btn-outline-danger w-100 mb-5" v-if="sharestate.user_id == $route.params.id">Delete Account</button>

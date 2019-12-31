@@ -64,9 +64,6 @@ export default {
             store.logoutAction()
             this.$router.push('/login')
         }
-    },
-    created(){
-        console.log("created:",this.shareState.user_avatar)
     }
 }
 </script>
