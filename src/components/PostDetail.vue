@@ -59,7 +59,13 @@
                     <small class="ml-auto">{{$moment(comment.timestamp).format("YYYY/MM/DD HH:mm:ss")}}</small>
                   </div>
 
-                  <vue-markdown :source="comment.body" class="mb-2"></vue-markdown>
+                  <vue-markdown 
+                    :source="comment.body" 
+                    class="mb-2"
+                    :html="false"
+                    
+                    >
+                  </vue-markdown>
                   <div style="font-size:.6em;">
                     <a href="#" class="g-color-success g-color-success--hover">
                       <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
@@ -93,8 +99,10 @@
                         <small class="ml-auto">{{$moment(child.timestamp).format("YYYY/MM/DD HH:mm:ss")}}</small>
                       </div>
                       <vue-markdown
-                        :source="child.body"
+                        :source="child.body|filterA(child.body)"
                         class="mb-2"
+                        :html="true"
+                        
                       >
                       </vue-markdown>
                       <div style="font-size:.6em;">
@@ -118,6 +126,12 @@
           </ul>
           <!-- End 顶层评论 -->
         </div>
+        <pagination 
+          :curPage="comments._meta.page"
+          :perPage="comments._meta.per_page"
+          :totalPage="comments._meta.total_pages"
+        >
+        </pagination>
         <!-- End Comment display -->
 
 
@@ -169,6 +183,7 @@ import VueMarkdown from "vue-markdown";
 import "../assets/jquery.sticky";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import Pagination from './Base/Pagination'
 const highlightCode = () => {
   let blocks = document.querySelectorAll("pre code");
   blocks.forEach(block => {
@@ -188,7 +203,13 @@ export default {
         title: "",
         views: 0
       },
-      comments: "",
+      comments: {
+        _meta:{
+          page:'',
+          per_page:'',
+          total_pages:''
+        }
+      },
       //回复的表单
       commentForm: {
         body_comment:'',
@@ -202,7 +223,8 @@ export default {
     };
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    Pagination
   },
   methods: {
     tocAlready() {
@@ -287,6 +309,13 @@ export default {
     _getPostComments(id) {
       let page = 1;
       let per_page = 10;
+      if(typeof this.$route.query.page != 'undefined'){
+        page = this.$route.query.page
+      }
+ 
+      if(typeof this.$route.query.per_page != 'undefined'){
+        per_page = this.$route.query.per_page
+      }
       const path = `/posts/${id}/comments?page=${page}&per_page=${per_page}`;
       this.$axios
         .get(path)
@@ -322,6 +351,8 @@ export default {
   beforeRouteUpdate(to, from, next) {
     next();
     this._getPost(to.params.id);
+    this._getPostComments(to.params.id)
+    
     
   },
   mounted() {
@@ -329,6 +360,12 @@ export default {
   },
   updated() {
     highlightCode();
+  },
+  filters:{
+    filterA:function(value){
+      let newvalue = '<p>'+value+'</p>'
+      return newvalue
+    }
   }
 };
 </script>
