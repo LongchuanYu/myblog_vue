@@ -4,3 +4,10 @@ a:hover{
 .btn:disabled,.btn.disabled{
     cursor: default;
 }
+
+.g-color-success--hover:hover{
+    color:#28a745;
+  }
+.g-color-success{
+    color:#6c757d;
+  }

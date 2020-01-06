@@ -47,15 +47,29 @@
               class="comment-item "
             >
               <div class="card-body border mb-2 d-flex align-items-start">
-                <img :src="comment.author.avatar" alt="" class="mr-2" style="width:30px; height:30px;">
+                <img :src="comment.author.avatar" alt="" class="mr-3" style="width:30px; height:30px;">
                 <div class="w-100">
                   <div class="d-flex mb-2">
-                    <a href="#">{{comment.author.username}}</a>
+                    <router-link 
+                      :to="{path:'/user/'+comment.author.id}"
+                      class="font-weight-bold text-success"
+                      
+                    >{{comment.author.username}}</router-link>
+                    
                     <small class="ml-auto">{{$moment(comment.timestamp).format("YYYY/MM/DD HH:mm:ss")}}</small>
                   </div>
 
-                  <vue-markdown :source="comment.body"></vue-markdown>
-                  <a href="javascript:;" class="comment-reply-link" @click="onClickReply(comment)">回复</a>
+                  <vue-markdown :source="comment.body" class="mb-2"></vue-markdown>
+                  <div style="font-size:.6em;">
+                    <a href="#" class="g-color-success g-color-success--hover">
+                      <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
+                    </a>
+                    
+                    <a href="javascript:;" class="comment-reply-link g-color-success g-color-success--hover" @click="onClickReply(comment)">
+                      <i class="fa fa-pencil-square-o mr-2"> 回复</i>
+                    </a>
+                  </div>
+                  
                 </div>
 
               </div>
@@ -69,21 +83,29 @@
                   class="comment-item"
                 >
                   <div class="card-body border mb-2 d-flex align-items-start">
-                    <img :src="child.author.avatar" alt="" class="mr-2" style="width:30px; height:30px;">
+                    <img :src="child.author.avatar" alt="" class="mr-3" style="width:30px; height:30px;">
                     <div class="w-100">
                       <div class="d-flex mb-2">
-                        <a href="#">{{child.author.username}}</a>
+                        <router-link 
+                          :to="{path:'/user/'+child.author.id}"
+                          class=" text-success font-weight-bold"
+                        >{{child.author.username}}</router-link>
                         <small class="ml-auto">{{$moment(child.timestamp).format("YYYY/MM/DD HH:mm:ss")}}</small>
                       </div>
                       <vue-markdown
                         :source="child.body"
-                      >  
+                        class="mb-2"
+                      >
                       </vue-markdown>
-                      <a
-                        @click="onClickReply(child)"
-                        href="javascript:;"
-                        class="comment-reply-link"
-                      >回复</a>
+                      <div style="font-size:.6em;">
+                        <a href="#" class="g-color-success g-color-success--hover">
+                          <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
+                        </a>
+                        
+                        <a href="javascript:;" class="comment-reply-link g-color-success g-color-success--hover" @click="onClickReply(child)">
+                          <i class="fa fa-pencil-square-o "> 回复</i>
+                        </a>
+                      </div>
                     </div>
 
                   </div>
@@ -102,7 +124,7 @@
         <!-- 回复框 -->
         <form @submit.prevent="onSubmitAddComment"  @reset.prevent="onResetAddComment" class="mb-4" id="addCommentForm" hidden>
           <div class="form-group">
-            <textarea v-model="commentForm.body_reply" id="reply_body" rows="5" class="form-control"></textarea>
+            <textarea v-model="commentForm.body_reply" id="reply_body" rows="5" class="form-control" :placeholder="'回复 '+commentForm.author_name"></textarea>
             <div class="invalid-feedback"></div>
           </div>
           <button type="reset" class="btn btn-secondary btn-sm">Cancel</button>
@@ -220,7 +242,7 @@ export default {
     },
     onResetAddComment(){
       $("#addCommentForm").attr('hidden','hidden')
-      this._tearDown()
+      this._tearDown('reply')
     },
     onClickReply(comment) {
       //注意这里回复了谁，parent_id就是回复对象的id
@@ -230,9 +252,19 @@ export default {
       
       
     },
-    _tearDown(){
-      this.commentForm.body_comment = ''
-      this.commentForm.body_reply=''
+    _tearDown(who){
+      switch(who){
+        case 'comment':
+          this.commentForm.body_comment=''
+          break
+        case 'reply':
+          this.commentForm.body_reply=''
+          break;
+        default:
+          this.commentForm.body_comment=''
+          this.commentForm.body_reply=''
+          break;
+      }
       this.commentForm.author_id=''
       this.commentForm.parent_id=''
       this.commentForm.author_name=''
@@ -318,4 +350,6 @@ ul {
 .toc > ul > li > ul > li > ul {
   padding-left: 1.2em;
 }
+
+
 </style>
