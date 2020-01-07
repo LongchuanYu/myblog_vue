@@ -2,7 +2,7 @@
   <div class="container">
     <!-- --------------------Modal Edit------------------------ -->
     <div
-      class="modal fade"
+      class="modal fade g-teardownModal"
       id="exampleModal"
       tabindex="-1"
       role="dialog"
@@ -57,7 +57,7 @@
 
     <!-- Modal Delete -->
     <div
-      class="modal fade"
+      class="modal fade g-teardownModal"
       id="modalDelete"
       tabindex="-1"
       role="dialog"

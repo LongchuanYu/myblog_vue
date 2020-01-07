@@ -66,7 +66,7 @@
                     
                     >
                   </vue-markdown>
-                  <div style="font-size:.7em;" class="d-flex">
+                  <div style="font-size:.7em;" class="d-flex justify-content-start">
                     <a 
                       href="#" 
                       class="g-color-secondary g-color-success--hover align-self-center"
@@ -74,14 +74,27 @@
                     >
                       <i class="fa fa-thumbs-o-up mr-2 "> 赞</i>
                     </a>
+
+
                     <a href="javascript:;" class="align-self-center comment-reply-link g-color-secondary g-color-success--hover" @click="onClickReply(comment)">
-                      <i class="fa fa-pencil-square-o mr-2"> 回复</i>
+                      <i class="fa fa-comment-o mr-2" > 回复</i>
                     </a>
+
+
+                    <a
+                      data-toggle="modal" data-target="#updateModal"
+                      v-if="post.author.id==sharestate.user_id || comment.author.id == sharestate.user_id" 
+                      href="javascript:;" 
+                      class="l-update--hover fa fa-pencil-square-o ml-auto align-self-center border rounded g-color-secondary p-1"
+                      @click="editCommentForm=Object.assign(editCommentForm,comment)"
+                    > 修改</a>
+
+
                     <a
                       data-toggle="modal" data-target="#deleteModal"
                       v-if="post.author.id==sharestate.user_id || comment.author.id == sharestate.user_id" 
                       href="javascript:;" 
-                      class="l-delete--hover fa fa-trash-o ml-auto align-self-center border rounded g-color-secondary p-1"
+                      class="l-delete--hover fa fa-trash-o ml-2 align-self-center border rounded g-color-secondary p-1"
                       @click="deleteCommentid=comment.id"
                     > 删除</a>
                     
@@ -126,7 +139,7 @@
                         </a>
                         
                         <a href="javascript:;" class="comment-reply-link g-color-secondary g-color-success--hover align-self-center" @click="onClickReply(child)">
-                          <i class="fa fa-pencil-square-o "> 回复</i>
+                          <i class="fa fa-pencil-square-o"> 回复</i>
                         </a>
                         <a
                           data-toggle="modal" data-target="#deleteModal"
@@ -185,8 +198,11 @@
       </div>
       <!-- End Article Content -->
 
-      <!-- Modal -->
-      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+
+      <!-- Modal delete-->
+      <div class="modal fade g-teardownModal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -195,9 +211,6 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <!-- <div class="modal-body">
-              ...
-            </div> -->
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
               <button type="button" class="btn btn-primary" @click="onDeleteComment()">确认</button>
@@ -205,7 +218,36 @@
           </div>
         </div>
       </div>
-      <!-- End Modal -->
+      <!-- End Modal delete-->
+
+      <!-- Modal update-->
+      <div class="modal fade g-teardownModal" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel">修改评论</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+<form @submit.prevent="onSubmitUpdateComment">
+  <div class="form-group">
+    <textarea v-model="editCommentForm.body" id="edit_commentBody" rows="5" class="form-control"></textarea>
+    <div class="invalid-feedback"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+    <button type="submit" class="btn btn-primary">确认</button>
+  </div>
+</form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal update-->
+
+
 
 
       <!-- TOC -->
@@ -248,8 +290,16 @@ export default {
         title: "",
         views: 0
       },
-      deleteCommentid:'',
-      comments: {
+      //用于删除评论
+      deleteCommentid:'',  
+      //用于修改评论
+      editCommentForm:{
+        body:'',
+        commentid:''
+      },  
+
+      //评论
+      comments: {  
         _meta:{
           page:'',
           per_page:'',
@@ -274,7 +324,7 @@ export default {
   },
   methods: {
     test(){
-      console.log(this.deleteCommentid)
+      console.log(this.editCommentForm)
     },
     tocAlready() {
       $("#sticker").sticky({ topSpacing: 10 });
@@ -325,6 +375,9 @@ export default {
         console.log(e)
         $("#deleteModal").modal("hide")
       })
+    },
+    onSubmitUpdateComment(){
+      let body = this.editCommentForm.body
     },
     onClickReply(comment) {
       //注意这里回复了谁，parent_id就是回复对象的id
@@ -404,7 +457,7 @@ export default {
         $("#reply_body").focus()
       });
       //vue-markdown
-      $("#comment_body,#reply_body").markdown({
+      $("#comment_body,#reply_body,#edit_commentBody").markdown({
         autofocus:false,
         savable:false,
         iconlibrary: 'fa',  // 使用Font Awesome图标
@@ -457,6 +510,10 @@ ul {
 .l-delete--hover:hover{
   border-color: #dc3545 !important;
   color:#dc3545;
+}
+.l-update--hover:hover{
+  border-color: #28a745 !important;
+  color:#28a745;
 }
 
 </style>
