@@ -66,14 +66,25 @@
                     
                     >
                   </vue-markdown>
-                  <div style="font-size:.6em;">
-                    <a href="#" class="g-color-success g-color-success--hover">
-                      <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
+                  <div style="font-size:.7em;" class="d-flex">
+                    <a 
+                      href="#" 
+                      class="g-color-secondary g-color-success--hover align-self-center"
+                      @click="test"
+                    >
+                      <i class="fa fa-thumbs-o-up mr-2 "> 赞</i>
                     </a>
-                    
-                    <a href="javascript:;" class="comment-reply-link g-color-success g-color-success--hover" @click="onClickReply(comment)">
+                    <a href="javascript:;" class="align-self-center comment-reply-link g-color-secondary g-color-success--hover" @click="onClickReply(comment)">
                       <i class="fa fa-pencil-square-o mr-2"> 回复</i>
                     </a>
+                    <a
+                      data-toggle="modal" data-target="#deleteModal"
+                      v-if="post.author.id==sharestate.user_id || comment.author.id == sharestate.user_id" 
+                      href="javascript:;" 
+                      class="l-delete--hover fa fa-trash-o ml-auto align-self-center border rounded g-color-secondary p-1"
+                      @click="deleteCommentid=comment.id"
+                    > 删除</a>
+                    
                   </div>
                   
                 </div>
@@ -105,14 +116,25 @@
                         
                       >
                       </vue-markdown>
-                      <div style="font-size:.6em;">
-                        <a href="#" class="g-color-success g-color-success--hover">
+                      <div style="font-size:.6em;"  class="d-flex">
+                        <a 
+                          href="javascript:;" 
+                          class="g-color-secondary g-color-success--hover align-self-center"
+                          
+                        >
                           <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
                         </a>
                         
-                        <a href="javascript:;" class="comment-reply-link g-color-success g-color-success--hover" @click="onClickReply(child)">
+                        <a href="javascript:;" class="comment-reply-link g-color-secondary g-color-success--hover align-self-center" @click="onClickReply(child)">
                           <i class="fa fa-pencil-square-o "> 回复</i>
                         </a>
+                        <a
+                          data-toggle="modal" data-target="#deleteModal"
+                          v-if="post.author.id==sharestate.user_id || child.author.id == sharestate.user_id" 
+                          href="javascript:;" 
+                          class="l-delete--hover fa fa-trash-o ml-auto align-self-center border rounded g-color-secondary p-1 "
+                          @click="deleteCommentid=child.id"
+                        > 删除</a>
                       </div>
                     </div>
 
@@ -163,6 +185,29 @@
       </div>
       <!-- End Article Content -->
 
+      <!-- Modal -->
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">确认删除？</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- <div class="modal-body">
+              ...
+            </div> -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" @click="onDeleteComment()">确认</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal -->
+
+
       <!-- TOC -->
       <div class="col-md-3">
         <div id="sticker">
@@ -203,6 +248,7 @@ export default {
         title: "",
         views: 0
       },
+      deleteCommentid:'',
       comments: {
         _meta:{
           page:'',
@@ -227,6 +273,9 @@ export default {
     Pagination
   },
   methods: {
+    test(){
+      console.log(this.deleteCommentid)
+    },
     tocAlready() {
       $("#sticker").sticky({ topSpacing: 10 });
     },
@@ -266,6 +315,17 @@ export default {
       $("#addCommentForm").attr('hidden','hidden')
       this._tearDown('reply')
     },
+    onDeleteComment(){
+      const path = `/comments/${this.deleteCommentid}`
+      this.$axios.delete(path).then(res=>{
+        console.log(res)
+        $("#deleteModal").modal("hide")
+        this._getPostComments(this.$route.params.id);
+      }).catch(e=>{
+        console.log(e)
+        $("#deleteModal").modal("hide")
+      })
+    },
     onClickReply(comment) {
       //注意这里回复了谁，parent_id就是回复对象的id
       this.commentForm.parent_id = comment.id
@@ -299,6 +359,7 @@ export default {
       this.$axios
         .get(path)
         .then(res => {
+          console.log('post:',res.data)
           this.post = res.data;
         })
         .catch(e => {
@@ -320,7 +381,7 @@ export default {
       this.$axios
         .get(path)
         .then(res => {
-          console.log(res.data);
+          console.log('comment:',res.data);
           this.comments = res.data;
         })
         .catch(e => {
@@ -330,21 +391,28 @@ export default {
   },
   created: function() {
     const postid = this.$route.params.id;
+    let that = this;
     this._getPost(postid);
     this._getPostComments(postid);
 
     $(document).ready(function() {
+      //监听回复按钮
       $("body").on("click", ".comment-reply-link", function() {
         var $comment = $(this).closest(".comment-item")
         $("#addCommentForm").removeAttr('hidden')
         $comment.after($("#addCommentForm"))
         $("#reply_body").focus()
       });
+      //vue-markdown
       $("#comment_body,#reply_body").markdown({
         autofocus:false,
         savable:false,
         iconlibrary: 'fa',  // 使用Font Awesome图标
         language: 'zh'
+      })
+      //监听模态框关闭
+      $('#deleteModal').on('hidden.bs.modal', function (e) {
+        that.deleteCommentid=''
       })
     });
   },
@@ -363,8 +431,7 @@ export default {
   },
   filters:{
     filterA:function(value){
-      let newvalue = '<p>'+value+'</p>'
-      return newvalue
+      return value
     }
   }
 };
@@ -387,6 +454,9 @@ ul {
 .toc > ul > li > ul > li > ul {
   padding-left: 1.2em;
 }
-
+.l-delete--hover:hover{
+  border-color: #dc3545 !important;
+  color:#dc3545;
+}
 
 </style>

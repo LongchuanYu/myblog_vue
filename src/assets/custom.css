@@ -8,6 +8,9 @@ a:hover{
 .g-color-success--hover:hover{
     color:#28a745;
   }
-.g-color-success{
+.g-color-secondary{
     color:#6c757d;
+  }
+  .g-font-size-dot7{
+    font-size:0.7em;
   }

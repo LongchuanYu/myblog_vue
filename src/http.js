@@ -30,10 +30,11 @@ axios.interceptors.response.use(function(response){
             store.logoutAction()
             Vue.toasted.error('401:Authorization error')
             if (router.currentRoute.path !=='/login'){
-                //Home页面删除或者更新操作，如果没有登录认证，会跳转到登陆界面，这时候模态框蒙版会遮住登录界面
-                //流程是 request - request拦截 - response拦截 - 模态框response Catch Error 。。
+                //（？）Home页面删除或者更新操作，如果没有登录认证，会跳转到登陆界面，这时候模态框蒙版会遮住登录界面
+                // 流程是 request - request拦截 - response拦截 - 模态框response Catch Error 。。
                 $('#exampleModal').modal('hide')
                 $("#modalDelete").modal("hide")
+                $("#deleteModal").modal("hide")
                 router.replace({
                     path:'/login',
                     query:{redirect: router.currentRoute.path}
