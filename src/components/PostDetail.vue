@@ -133,19 +133,30 @@
                         <a 
                           href="javascript:;" 
                           class="g-color-secondary g-color-success--hover align-self-center"
-                          
-                        >
-                          <i class="fa fa-thumbs-o-up mr-2"> 赞</i>
-                        </a>
+                        ><i class="fa fa-thumbs-o-up mr-2"> 赞</i></a>
                         
-                        <a href="javascript:;" class="comment-reply-link g-color-secondary g-color-success--hover align-self-center" @click="onClickReply(child)">
-                          <i class="fa fa-pencil-square-o"> 回复</i>
+
+
+                        <a 
+                          href="javascript:;" 
+                          class="comment-reply-link g-color-secondary g-color-success--hover align-self-center" 
+                          @click="onClickReply(child)"><i class="fa fa-comment-o"> 回复</i>
                         </a>
+
+                        <a
+                          data-toggle="modal" data-target="#updateModal"
+                          v-if="post.author.id==sharestate.user_id || child.author.id == sharestate.user_id" 
+                          href="javascript:;" 
+                          class="l-update--hover fa fa-pencil-square-o ml-auto align-self-center border rounded g-color-secondary p-1"
+                          @click="editCommentForm=Object.assign(editCommentForm,child)"
+                        > 修改</a>
+
+
                         <a
                           data-toggle="modal" data-target="#deleteModal"
                           v-if="post.author.id==sharestate.user_id || child.author.id == sharestate.user_id" 
                           href="javascript:;" 
-                          class="l-delete--hover fa fa-trash-o ml-auto align-self-center border rounded g-color-secondary p-1 "
+                          class="l-delete--hover fa fa-trash-o ml-2 align-self-center border rounded g-color-secondary p-1 "
                           @click="deleteCommentid=child.id"
                         > 删除</a>
                       </div>
@@ -233,8 +244,13 @@
             <div class="modal-body">
 <form @submit.prevent="onSubmitUpdateComment">
   <div class="form-group">
-    <textarea v-model="editCommentForm.body" id="edit_commentBody" rows="5" class="form-control"></textarea>
-    <div class="invalid-feedback"></div>
+    <textarea 
+      v-model="editCommentForm.body" 
+      id="edit_commentBody" rows="5" 
+      class="form-control"
+      v-bind:class="{'form-control':true,'is-invalid':editCommentForm.editError }"
+    ></textarea>
+    <div class="invalid-feedback">{{editCommentForm.editError}}</div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -295,7 +311,9 @@ export default {
       //用于修改评论
       editCommentForm:{
         body:'',
-        commentid:''
+        commentid:'',
+        errors:0,
+        editError:null
       },  
 
       //评论
@@ -378,6 +396,29 @@ export default {
     },
     onSubmitUpdateComment(){
       let body = this.editCommentForm.body
+      if($.trim(body) == ""){
+        this.editCommentForm.errors+=1
+        this.editCommentForm.editError='回复不能为空'
+      }
+      if(this.editCommentForm.errors){
+        $("#edit_commentBody")
+          .parent(".md-editor")
+          .addClass("is-invalid");
+        return ;
+      }else{
+        $("#edit_commentBody")
+          .parent(".md-editor")
+          .removeClass("is-invalid");
+      }
+      const path=`/comments/${this.editCommentForm.id}`
+      this.$axios.put(path,{body:this.editCommentForm.body}).then(res=>{
+        // console.log('updateComment:',res.data)
+        $("#updateModal").modal("hide");
+        this._getPostComments(this.$route.params.id)
+      }).catch(e=>{
+        console.log(e)
+      })
+
     },
     onClickReply(comment) {
       //注意这里回复了谁，parent_id就是回复对象的id
@@ -386,6 +427,20 @@ export default {
       this.commentForm.author_name = comment.author.username||comment.author.name
       
       
+    },
+    _tearDownUpdate(who){
+      switch(who){
+        case 'error':
+          this.editCommentForm.errors=0
+          this.editCommentForm.editError=null
+          break;
+        case 'all':
+          this.editCommentForm.body=''
+          this.editCommentForm.commentid=''
+          this.editCommentForm.errors=0
+          this.editCommentForm.editError=null
+      }
+
     },
     _tearDown(who){
       switch(who){
@@ -463,9 +518,13 @@ export default {
         iconlibrary: 'fa',  // 使用Font Awesome图标
         language: 'zh'
       })
-      //监听模态框关闭
+      //监听delete模态框关闭
       $('#deleteModal').on('hidden.bs.modal', function (e) {
         that.deleteCommentid=''
+      })
+      //监听update模态框关闭
+      $('#updateModal').on('hidden.bs.modal', function (e) {
+        that._tearDownUpdate('all')
       })
     });
   },
