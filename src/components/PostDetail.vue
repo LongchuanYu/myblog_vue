@@ -7,15 +7,14 @@
           <!-- 标题 -->
           <header class="mb-3">
             <div class="h1 text-info text-break mb-3">{{post.title}}</div>
-            <ul class="mb-3 d-sm-flex list-inline text-secondary">
+            <ul class="mb-3 d-sm-flex list-inline text-secondary g-font-size-dot9">
               <li class="list-inline-item">{{post.author.username||post.author.name}}</li>
               <li class="list-inline-item">/</li>
               <li class="list-inline-item">
-                <i class="fa fa-clock-o mr-1"></i>
-                {{$moment(post.timestamp).format('YYYY/MM/DD HH:mm:ss')}}
+                <i class="fa fa-clock-o"></i> {{$moment(post.timestamp).format('YYYY/MM/DD HH:mm:ss')}}
               </li>
               <li class="list-inline-item">/</li>
-              <li class="list-inline-item">Comment(0)</li>
+              <li class="list-inline-item"><i class="fa fa-commenting-o"></i> {{comments.items.length}}</li>
               <li class="list-inline-item ml-auto">
                 <i class="fa fa-eye text-muted mr-1"></i>
                 {{post.views}}次阅读
@@ -68,11 +67,16 @@
                   </vue-markdown>
                   <div style="font-size:.7em;" class="d-flex justify-content-start">
                     <a 
-                      href="#" 
-                      class="g-color-secondary g-color-success--hover align-self-center"
-                      @click="test"
+                      href="javascript:;" 
+                      class="g-color-secondary g-color-success--hover align-self-center mr-3"
+                      :class="{' g-color-danger--hover':comment.likers_id.indexOf(sharestate.user_id)!=-1}"
+                      @click="onLikeOrUnlike(comment)"
                     >
-                      <i class="fa fa-thumbs-o-up mr-2 "> 赞</i>
+                      <i class="fa fa-thumbs-o-up" :class="{
+                        'text-danger':comment.likers_id.indexOf(sharestate.user_id)!=-1,
+                      }"></i>
+                      <span class="" v-if="comment.likers_id.length"> {{comment.likers_id.length}} 人赞</span>
+                      <span class="" v-else> 赞</span>
                     </a>
 
 
@@ -132,9 +136,13 @@
                       <div style="font-size:.6em;"  class="d-flex">
                         <a 
                           href="javascript:;" 
-                          class="g-color-secondary g-color-success--hover align-self-center"
-                        ><i class="fa fa-thumbs-o-up mr-2"> 赞</i></a>
-                        
+                          class="g-color-secondary g-color-success--hover align-self-center mr-3"
+                          @click="onLikeOrUnlike(child)"
+                        >
+                          <i class="fa fa-thumbs-o-up" :class="{'text-danger':child.likers_id.indexOf(sharestate.user_id)!=-1}"></i>
+                          <span v-if="child.likers_id.length"> {{child.likers_id.length}} 人赞</span>
+                          <span v-else> 赞</span>
+                        </a>
 
 
                         <a 
@@ -224,7 +232,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-primary" @click="onDeleteComment()">确认</button>
+              <button type="button" class="btn btn-danger" @click="onDeleteComment()">确认</button>
             </div>
           </div>
         </div>
@@ -322,9 +330,11 @@ export default {
           page:'',
           per_page:'',
           total_pages:''
-        }
+        },
+        likers_id:[],
+        items:[]
       },
-      //回复的表单
+      //回复+评论的表单
       commentForm: {
         body_comment:'',
         body_reply: "", //回复内容
@@ -376,7 +386,7 @@ export default {
         })
         .catch(e => {
           this._tearDown()
-          console.log("Create Comment Failed...");
+          console.log("Create Comment Failed...",e.response);
         });
     },
     onResetAddComment(){
@@ -427,6 +437,20 @@ export default {
       this.commentForm.author_name = comment.author.username||comment.author.name
       
       
+    },
+    onLikeOrUnlike(comment){
+      let path = ''
+      if(comment.likers_id.indexOf(this.sharestate.user_id)==-1){
+        //未点赞
+        path = `/comments/${comment.id}/like`
+      }else{
+        path = `/comments/${comment.id}/unlike`
+      }
+      this.$axios.get(path).then(res=>{
+        this._getPostComments(this.$route.params.id)
+      }).catch(e=>{
+        console.log(e)
+      })
     },
     _tearDownUpdate(who){
       switch(who){

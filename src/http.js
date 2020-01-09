@@ -8,7 +8,6 @@ axios.defaults.baseURL = 'http://localhost:5000/api'
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
-    
     const token = window.localStorage.getItem('madblog-token')
     // console.log('request ok..')
     if(token){

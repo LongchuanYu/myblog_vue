@@ -7,10 +7,19 @@ a:hover{
 
 .g-color-success--hover:hover{
     color:#28a745;
-  }
+}
 .g-color-secondary{
     color:#6c757d;
-  }
-  .g-font-size-dot7{
+}
+.g-font-size-dot7{
     font-size:0.7em;
-  }
+}
+.g-font-size-dot8{
+  font-size:0.8em;
+}
+.g-font-size-dot9{
+  font-size:0.9em;
+}
+.g-color-danger--hover:hover{
+  color:#dc3545;
+}
