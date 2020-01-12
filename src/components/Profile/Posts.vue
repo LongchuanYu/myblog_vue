@@ -263,7 +263,7 @@ export default {
           }
         })
         .then(res => {
-          console.log("UserpostsList:", res);
+          console.log("Posts:", res);
           this.posts = res.data;
         })
         .catch(e => {

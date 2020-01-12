@@ -81,7 +81,7 @@
 
               <li class="nav-item">
                 <router-link
-                  :to="{name:'UserPostsList'}"
+                  :to="{name:'Posts'}"
                   class="nav-link"
                   href="#"
                   v-bind:active-class="'active'"

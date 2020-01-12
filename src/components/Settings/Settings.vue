@@ -4,7 +4,7 @@
 			<div class="col-lg-3 mb-5">
         <div class="border p-4" style="height:400px;">
           <!-- avatar -->
-          <div class="d-flex flex-md-column justify-content-center align-items-md-center">
+          <div class="d-flex flex-column justify-content-center align-items-center">
             <img :src="user._links.avatar" alt="" style="width:100px;height:100px; border-radius:50%" class="mb-2">
             <span>{{user.username||user.name}}</span>
           </div>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import store from '../../../store'
+import store from '../../store'
 export default {
     data(){
       return {

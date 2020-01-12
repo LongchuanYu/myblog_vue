@@ -1,25 +1,40 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import Register from '@/components/User/Auth/Register'
-import Login from '@/components/User/Auth/Login'
-import Ping from '@/components/Ping'
-import User from '@/components/User/User'
 
+//首页
+import Home from '@/components/Home'
+//用户认证
+import Register from '@/components/Auth/Register'
+import Login from '@/components/Auth/Login'
+//用户个人主页
+import User from '@/components/Profile/User'
+import Followers from '@/components/Profile/Followers'
+import Following from '@/components/Profile/Following'
+import Overview from '@/components/Profile/Overview'
+import Posts from '@/components/Profile/Posts'
+
+//用户个人设置
+import Settings from '@/components/Settings/Settings'
+import Profile from '@/components/Settings/Profile'
+import Account from '@/components/Settings/Account'
+import Email from '@/components/Settings/Email'
+import Notiffication from '@/components/Settings/Notiffication'
+
+//用户资源
+
+//用户通知
+import FollowingPosts from '@/components/Notifications/FollowingPosts'
+import Likes from '@/components/Notifications/Likes'
+import Notifications from '@/components/Notifications/Notifications'
+import RecivedComments from '@/components/Notifications/RecivedComments'
+import RecivedMessages from '@/components/Notifications/RecivedMessages'
+
+//博客详情页
 import PostDetail from '@/components//PostDetail'
 
-//子路由
-import Followers from '@/components/User/Followers'
-import Following from '@/components/User/Following'
-import Overview from '@/components/User/Overview'
-import UserPostsList from '@/components/Post/UserPostsList'
+//ping
+import Ping from '@/components/Ping'
 
-//子路由2
-import Settings from '@/components/User/Settings/Settings'
-import Profile from '@/components/User/Settings/Profile'
-import Account from '@/components/User/Settings/Account'
-import Email from '@/components/User/Settings/Email'
-import Notiffication from '@/components/User/Settings/Notiffication'
 Vue.use(Router)
 
 const router = new Router({
@@ -51,7 +66,7 @@ const router = new Router({
         {path: 'overview', name: 'UserOverview', component: Overview },
         {path:'followers',name:'UserFollowers',component:Followers},
         {path:'following',name:'UserFollowing',component:Following},
-        {path:'UserPostsList',name:'UserPostsList',component:UserPostsList}
+        {path:'posts',name:'Posts',component:Posts}
       ],
       component:User,
       meta:{
@@ -71,7 +86,22 @@ const router = new Router({
         {path:'email',name:'SettingEmail',component:Email},
         {path:'notiffication',name:'SettingNotiffication',component:Notiffication}
       ]
+    },{
+      path:'/notifications',
+      component:Notifications,
+      children:[
+        {path:'',component:RecivedComments},
+        {path:'comments',name:'RecivedComments',component:RecivedComments},
+        {path:'messages',name:'RecivedMessages',component:RecivedMessages},
+        {path:'follows',name:'Follows',component:Followers},
+        { path: 'likes', name: 'Likes', component: Likes },
+        { path: 'following-posts', name: 'FollowingPosts', component: FollowingPosts }
+      ],
+      meta:{
+        requiresAuth:true
+      }
     }
+
   ]
 })
 
