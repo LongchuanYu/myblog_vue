@@ -38,13 +38,19 @@
     >
       <div class="position-relative">
         <div class="position-absolute l-read-mark" v-if="comment.is_new"></div>
-        <img :src="comment.author.avatar" alt="" class="mr-3 align-self-start" style="width:50px;weight:50px;border-radius:50%">
+        <router-link :to="{path:`/user/${comment.author.id}`}">
+          <img :src="comment.author.avatar" alt="" class="mr-3 align-self-start" style="width:50px;weight:50px;border-radius:50%">
+        </router-link>
       </div>
       
-
       <div class="w-100">
         <div class="d-flex mb-2">
-          <span class="align-self-center">{{comment.author.username||comment.author.name}} 评论了你的文章 《{{comment.post}}》</span>
+          
+          <span class="align-self-center">
+            <router-link :to="{path:`/user/${comment.author.id}`}">{{comment.author.username||comment.author.name}}</router-link>
+            评论了你的文章
+            <router-link :to="{path:`/post/${comment.post.id}`}">《{{comment.post.title}}》</router-link>
+          </span>
           <span class="ml-auto g-font-size-dot7 align-self-center">{{$moment(comment.timestamp).format('YYYY/MM/DD HH:mm:ss')}}</span>
         </div>
         <vue-markdown
@@ -53,24 +59,24 @@
         >
         </vue-markdown>
         <div class="g-font-size-dot7 d-flex">
-          <a href="javascript:;" class="align-self-center comment-reply-link g-color-secondary g-color-success--hover">
+          <!-- <a href="javascript:;" class="align-self-center comment-reply-link g-color-secondary g-color-success--hover">
             <i class="fa fa-comment-o mr-3" > 回复</i>
           </a>
           <a href="javascript:;" class="align-self-center comment-reply-link g-color-secondary g-color-success--hover">
-            <i class="fa fa-comment-o" > 查看对话</i>
-          </a>
+            <i class="fa fa-external-link" > 查看对话</i>
+          </a> -->
 
-        <a
-            href="javascript:;" 
-            class="l-success--hover fa fa-check-circle-o ml-auto align-self-center border rounded g-color-secondary p-1 mr-2"
-          > 已读</a>
-          <a
+        <!-- <a
+          href="javascript:;" 
+          class="l-success--hover fa fa-check-circle-o ml-auto align-self-center border rounded g-color-secondary p-1 mr-2"
+        > 已读</a> -->
+          <!-- <a
             href="javascript:;" 
             class="l-danger--hover fa fa-trash-o  align-self-center border rounded g-color-secondary p-1"
-          > 删除</a>
+          > 删除</a> -->
         </div>
       </div>
-    </div>`
+    </div>
   </div>
   <!-- End 消息体 -->
   <pagination 
@@ -101,7 +107,7 @@ export default {
   methods:{
     _getUserRecivedComments(){
       let page = this.$route.query.page || 1
-      let per_page = this.$route.query.per_page || 20
+      let per_page = this.$route.query.per_page || 2
       const path = `/users/${this.shareState.user_id}/recived-comments/?page=${page}&per_page=${per_page}`
       this.$axios.get(path).then(res=>{
         console.log('recived-comments:',res.data)
