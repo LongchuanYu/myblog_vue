@@ -42,8 +42,10 @@
           <button class="btn btn-outline-success my-2 my-sm-0" type="button" disabled>搜索</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          <li class="nav-item">
-            <router-link :to="{path:'/notifications'}" class="nav-link">通知</router-link>
+          <li class="nav-item mr-3">
+            <router-link :to="{path:'/notifications'}" class="nav-link">
+              通知<span class="badge badge-danger g-font-size-dot7 ml-1">11</span>
+            </router-link>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -81,6 +83,7 @@
 </template>
 <script>
 import store from "../../store.js";
+import axios from 'axios'
 export default {
   name: "Navbar",
   data() {
@@ -93,6 +96,34 @@ export default {
       store.logoutAction();
       this.$router.push("/login");
     }
+  },
+  mounted:function(){
+    const LOOP_TIME = 5 * 1000;
+    let that = this;
+    $(function(){
+      let since = 0
+      let userid = that.shareState.user_id
+      
+      var interval = setInterval(()=>{
+        if(window.localStorage.getItem('madblog-token')){
+          let path = `/users/${userid}/notifications?since=${since}`
+          let total_notifications_count = 0
+          axios.get(path).then(res=>{
+            console.log(res)
+            //res.data[].id/name/payload_json/
+            for(let i=0;i<res.data.length;i++){
+              total_notifications_count += parseInt(res.data[i].payload_json)
+              since = res.data[i].timestamp
+            }
+            console.log(total_notifications_count)
+            
+          }).catch(e=>{
+            console.log('setInterValError:',e)
+          })
+        }
+      },LOOP_TIME)
+      
+    })
   }
 };
 </script>
