@@ -43,8 +43,8 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="nav-item mr-3">
-            <router-link :to="{path:'/notifications'}" class="nav-link">
-              通知<span class="badge badge-danger g-font-size-dot7 ml-1">11</span>
+            <router-link :to="{path:'/notifications'}" class="nav-link" @click.native="forceRefresh">
+              通知<span class="badge badge-danger g-font-size-dot7 ml-1" id="new_notifications_count" style="visibility: hidden;">0</span>
             </router-link>
           </li>
         </ul>
@@ -66,15 +66,15 @@
                 <router-link
                   v-bind:to="{ path:`/user/${shareState.user_id}`}"
                   class="dropdown-item"
-                >Profile</router-link>
-                <a class="dropdown-item" href="#">Settings</a>
+                >个人资料</router-link>
+                <a class="dropdown-item" href="#">设置</a>
                 <div class="dropdown-divider"></div>
-                <a v-on:click="handlerLogout" class="dropdown-item" href="#">Sign out</a>
+                <a v-on:click="handlerLogout" class="dropdown-item" href="#">注销登录</a>
               </div>
             </div>
           </li>
           <li class="nav-item" v-else>
-            <router-link to="/login" class="nav-link">Sign in</router-link>
+            <router-link to="/login" class="nav-link">登录</router-link>
           </li>
         </ul>
       </div>
@@ -88,34 +88,35 @@ export default {
   name: "Navbar",
   data() {
     return {
-      shareState: store.state
+      shareState: store.state,
     };
   },
   methods: {
     handlerLogout(e) {
       store.logoutAction();
       this.$router.push("/login");
+    },
+    forceRefresh(){
     }
   },
   mounted:function(){
     const LOOP_TIME = 5 * 1000;
     let that = this;
+    
     $(function(){
-      let since = 0
-      let userid = that.shareState.user_id
-      
+      let total_notifications_count = 0
       var interval = setInterval(()=>{
         if(window.localStorage.getItem('madblog-token')){
-          let path = `/users/${userid}/notifications?since=${since}`
-          let total_notifications_count = 0
+          let path = `/users/${that.shareState.user_id}/notifications`
+          
           axios.get(path).then(res=>{
             console.log(res)
             //res.data[].id/name/payload_json/
             for(let i=0;i<res.data.length;i++){
-              total_notifications_count += parseInt(res.data[i].payload_json)
-              since = res.data[i].timestamp
+              total_notifications_count = parseInt(res.data[i].payload_json)
             }
-            console.log(total_notifications_count)
+            $("#new_notifications_count").text(total_notifications_count)
+            $("#new_notifications_count").css('visibility',total_notifications_count?'visible':'hidden')
             
           }).catch(e=>{
             console.log('setInterValError:',e)
@@ -124,6 +125,11 @@ export default {
       },LOOP_TIME)
       
     })
+  },
+  watch:{
+    '$route'(to,from){
+      console.log(to,from)
+    }
   }
 };
 </script>

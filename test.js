@@ -15,5 +15,6 @@ var arr = [
         name:'eeee'
     }
 ]
+let ret = new Date()
 
-console.log(window.localStorage.getItem('madblog-token'))
+console.log(ret.getSeconds())
