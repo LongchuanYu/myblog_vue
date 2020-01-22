@@ -43,8 +43,8 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="nav-item mr-3">
-            <router-link :to="{path:'/notifications'}" class="nav-link" @click.native="forceRefresh">
-              通知<span class="badge badge-danger g-font-size-dot7 ml-1" id="new_notifications_count" style="visibility: hidden;">0</span>
+            <router-link :to="{path:'/notifications/comments'}" class="nav-link" @click.native="forceRefresh">
+              通知<span class="badge badge-danger g-font-size-dot7 ml-1" id="new_notifications_count" style="visibility: hidden;" v-if="shareState.is_authenticated">0</span>
             </router-link>
           </li>
         </ul>
@@ -97,10 +97,15 @@ export default {
       this.$router.push("/login");
     },
     forceRefresh(){
+      // return
+      this.shareState.update = false
+      this.$nextTick(()=>{
+        this.shareState.update = true
+      })
     }
   },
   mounted:function(){
-    const LOOP_TIME = 5 * 1000;
+    const LOOP_TIME = 10 * 1000;
     let that = this;
     
     $(function(){
@@ -110,7 +115,7 @@ export default {
           let path = `/users/${that.shareState.user_id}/notifications`
           
           axios.get(path).then(res=>{
-            console.log(res)
+            // console.log(res)
             //res.data[].id/name/payload_json/
             for(let i=0;i<res.data.length;i++){
               total_notifications_count = parseInt(res.data[i].payload_json)
@@ -125,11 +130,6 @@ export default {
       },LOOP_TIME)
       
     })
-  },
-  watch:{
-    '$route'(to,from){
-      console.log(to,from)
-    }
   }
 };
 </script>

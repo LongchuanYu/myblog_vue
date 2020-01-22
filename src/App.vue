@@ -3,7 +3,7 @@
     
     <navbar></navbar>
     
-    <router-view/>
+    <router-view ></router-view>
     <myfooter></myfooter>
   </div>
 </template>

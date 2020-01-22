@@ -25,7 +25,7 @@
         <i class="fa fa-bars"></i>
       </div>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-        <a href="#" class="dropdown-item">--</a>
+        <a href="javascript:;" class="dropdown-item" >--</a>
       </div>
     </div>
   </div>
@@ -92,6 +92,7 @@
 import store from '../../store'
 import VueMarkdown from "vue-markdown";
 import Pagination from '../Base/Pagination'
+import clear_comments from '../utility/clear_comments'
 export default {
   components:{
     VueMarkdown,
@@ -105,6 +106,7 @@ export default {
     
   },
   methods:{
+    
     _getUserRecivedComments(){
       let page = this.$route.query.page || 1
       let per_page = this.$route.query.per_page || 2
@@ -123,6 +125,10 @@ export default {
   beforeRouteUpdate(to,from,next){
     next()
     this._getUserRecivedComments()
+  },
+  beforeRouteLeave(to,from,next){
+    next()
+    clear_comments({that:this,type:0})
   }
 }
 </script>

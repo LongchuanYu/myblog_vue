@@ -27,10 +27,11 @@
 
 <script>
 import Member from '../Base/Member'
+import store from '../../store'
 export default {
     data(){
         return {
-            user:'',
+            shareState:store.state,
             followers:''
         }
     },
@@ -41,7 +42,8 @@ export default {
         onFollowUser(follower){
             const path = `/follow/${follower.id}`
             this.$axios.get(path).then(res=>{
-                this._getUserFollowers(this.$route.params.id)
+                this.$router.push({ path: this.$route.fullPath, query: { timestamp: Number(new Date()) } })
+                // this._getUserFollowers(this.$route.params.id||this.shareState.user_id)
             })
         },
         onUnfolloweUser(follower){
@@ -50,16 +52,8 @@ export default {
                 //（？）这里关注成功以后怎么局部刷新呢？
                 //  答:沙雕了，组件created的时候就是调用_getUserFollowers()方法获取数据的。
                 //  注意这里参数一定要是当前用户的id。
-                this._getUserFollowers(this.$route.params.id)
-            })
-        },
-        _getUser(id){
-            const path = `/users/${id}`
-            this.$axios.get(path).then(res=>{
-                // console.log('user: ',res.data)
-                this.user = res.data
-            }).catch(e=>{
-                console.error(e)
+                // this._getUserFollowers(this.$route.params.id||this.shareState.user_id)
+                this.$router.push({ path: this.$route.fullPath, query: { timestamp: Number(new Date()) } })
             })
         },
         _getUserFollowers(id){
@@ -83,6 +77,7 @@ export default {
                 params:payload
             }).then(res=>{
                 // console.log(res)
+                console.log('new fans:',res.data)
                 this.followers = res.data
             }).catch(e=>{
                 console.error(e)
@@ -90,14 +85,13 @@ export default {
         }
     },
     created:function(){
-        let userid = this.$route.params.id
-        this._getUser(userid)
+        let userid = this.$route.params.id || this.shareState.user_id
         this._getUserFollowers(userid)
     },
     beforeRouteUpdate(to,from,next){
         next()
-        this._getUser(to.params.id)
-        this._getUserFollowers(to.params.id)
+        let userid = to.params.id || this.shareState.user_id
+        this._getUserFollowers(userid)
 
     }
 }

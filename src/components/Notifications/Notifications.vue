@@ -17,7 +17,8 @@
             href="javascript:;" 
             :class="isComments"
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-pencil-square-o mr-2"></i> 回复我的
+              <i class="fa fa-pencil-square-o mr-2"></i> 回复我的 
+              <span class="badge badge-danger g-font-size-dot7 ml-1" v-if="shareState.is_authenticated && notifications.unread_recived_comments_count">{{notifications.unread_recived_comments_count}}</span>
             </router-link>
 
 
@@ -27,7 +28,7 @@
             v-bind:active-class="'active'" 
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-user-o mr-2"></i> 我的消息
+              <i class="fa fa-user-o mr-2"></i> 私信
             </router-link>
 
 
@@ -36,7 +37,7 @@
             v-bind:active-class="'active'"
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-envelope-o mr-2"></i> 关注的
+              <i class="fa fa-envelope-o mr-2"></i> 新粉丝
             </router-link>
 
 
@@ -46,7 +47,7 @@
             v-bind:active-class="'active'"
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-bell-o mr-2"></i> 喜欢的文章
+              <i class="fa fa-bell-o mr-2"></i> 收到的赞
             </router-link>
           </div>  <!-- end item list -->
           
@@ -56,7 +57,7 @@
 
 			<div class="col-lg-8">
 				<div class="" style="">
-					<router-view></router-view>
+					<router-view v-if="shareState.update"></router-view>
 				</div>
 			</div>
 				
@@ -66,6 +67,7 @@
 
 <script>
 import store from '../../store'
+import axios from 'axios'
 export default {
     data(){
       return {
@@ -76,6 +78,13 @@ export default {
           _links:{
             avatar:''
           }
+        },
+        notifications: {
+          unread_recived_comments_count: 0,
+          unread_messages_count: 0,
+          unread_follows_count: 0,
+          unread_likes_count: 0,
+          unread_followeds_posts_count: 0
         }
       }
     },
@@ -97,10 +106,32 @@ export default {
             .catch((e)=>{
               console.log(e)
             })
-        }
+        },
+        _getUserNotifications(){
+          let path = `/users/${this.shareState.user_id}/notifications`
+          
+          this.$axios.get(path).then(res=>{
+            //res.data[].id/name/payload_json/
+            for(let i=0;i<res.data.length;i++){
+              switch(res.data[i].name){
+                case 'unread_recived_comments_count':
+                  this.notifications.unread_recived_comments_count = res.data[i].payload_json
+                  break;
+              }
+            }
+
+          }).catch(e=>{
+            console.log('setInterValError:',e)
+          })
+        },
     },
     created:function(){
+      this._getUserNotifications()
       this._getUser(this.shareState.user_id)
+    },
+    beforeRouteUpdate(to,from,next){
+      this._getUserNotifications()
+      next()
     }
 }
 </script>

@@ -2,6 +2,7 @@ export default {
     debug: false,
     state: {
       is_new: false,
+      update:true,
       is_authenticated: window.localStorage.getItem('madblog-token') ? true : false,
       user_id:window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_id : 0,
       user_name: window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_name : '',
