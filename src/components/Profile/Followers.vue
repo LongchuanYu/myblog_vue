@@ -22,12 +22,19 @@
             @follow-user="onFollowUser(follower)"
             @unfollow-user="onUnfolloweUser(follower)"
         ></member>
+        <pagination 
+            v-if="followers._meta"
+            :curPage="followers._meta.page"
+            :perPage="followers._meta.per_page"
+            :totalPage="followers._meta.total_pages"
+        ></pagination>
     </div>
 </template>
 
 <script>
 import Member from '../Base/Member'
 import store from '../../store'
+import pagination from '../Base/Pagination'
 export default {
     data(){
         return {
@@ -36,6 +43,7 @@ export default {
         }
     },
     components:{
+        pagination,
         'member':Member
     },
     methods:{

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+// 导入 vue-scrollto，跳转到锚点时支持平滑过渡
+import VueScrollTo from 'vue-scrollto'
 //首页
 import Home from '@/components/Home'
 //用户认证
@@ -24,7 +25,7 @@ import Notiffication from '@/components/Settings/Notiffication'
 
 //用户通知
 import FollowingPosts from '@/components/Notifications/FollowingPosts'
-import Likes from '@/components/Notifications/Likes'
+import CommentsLikes from '@/components/Notifications/CommentsLikes'
 import Notifications from '@/components/Notifications/Notifications'
 import RecivedComments from '@/components/Notifications/RecivedComments'
 import RecivedMessages from '@/components/Notifications/RecivedMessages'
@@ -36,9 +37,44 @@ import PostDetail from '@/components//PostDetail'
 import Ping from '@/components/Ping'
 
 Vue.use(Router)
+// （？）锚点滚动的问题，路由改成history模式之后不能自动滚动到锚点，如何解决？ +
+// 答：如下用异步滚动的方式来解决，详见vue-route文档。
+// （？）如何解决前进到有#xxx的地址后，滚动到错误的位置？ -
+// 答：
+const scrollBehavior = function(to,from,savePosition){
+  if(savePosition){
+    if(to.hash){
+      setTimeout(() => {
+        VueScrollTo.scrollTo(to.hash,200)
+      }, 1000);
+      return {x:0,y:0}
+    }
+    return savePosition
+  }else{
+    if(to.hash){
+      //如果去的地址含有#xxx的锚点
+      // return new Promise((resolve,reject)=>{
+
+      //   setTimeout(() => {
+      //     resolve({selector:to.hash})
+      //   }, 1000)
+      // })
+      setTimeout(() => {
+        VueScrollTo.scrollTo(to.hash,200)
+      }, 1000);
+      return;
+    }
+    if(to.name == 'UserFollowers' && to.query.timestamp){
+      //个人资料 - 粉丝列表，点击关注后会滑倒顶，这里返回空对象来保持位置
+      return {}
+    }
+    return {x:0,y:0}
+  }
+}
 
 const router = new Router({
   mode: 'history',
+  scrollBehavior,
   routes: [
     {
       path: '/',
@@ -94,7 +130,7 @@ const router = new Router({
         {path:'comments',name:'RecivedComments',component:RecivedComments},
         {path:'messages',name:'RecivedMessages',component:RecivedMessages},
         {path:'follows',name:'Follows',component:Followers},
-        { path: 'likes', name: 'Likes', component: Likes },
+        { path: 'commentslikes', name: 'CommentsLikes', component: CommentsLikes },
         { path: 'following-posts', name: 'FollowingPosts', component: FollowingPosts }
       ],
       meta:{

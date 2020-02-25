@@ -3,6 +3,9 @@ export default {
     state: {
       is_new: false,
       update:true,
+      notifications:{
+        leaveRouteName:'RecivedComments'
+      },
       is_authenticated: window.localStorage.getItem('madblog-token') ? true : false,
       user_id:window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_id : 0,
       user_name: window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_name : '',
@@ -27,5 +30,7 @@ export default {
       this.state.user_id = 0
       this.state.user_name = ''
       this.state.user_avatar = ''
+      this.state.notifications.leaveRouteName='RecivedComments'
+
     }
   }

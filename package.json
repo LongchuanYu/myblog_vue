@@ -19,6 +19,7 @@
     "vue": "^2.5.2",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
+    "vue-scrollto": "^2.17.1",
     "vue-toasted": "^1.1.27"
   },
   "devDependencies": {
@@ -67,5 +68,19 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".postcssrc.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LongchuanYu/myblog_vue.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LongchuanYu/myblog_vue/issues"
+  },
+  "homepage": "https://github.com/LongchuanYu/myblog_vue#readme"
 }

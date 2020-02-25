@@ -38,16 +38,18 @@
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
               <i class="fa fa-envelope-o mr-2"></i> 新粉丝
+              <span class="badge badge-danger g-font-size-dot7 ml-1" v-if="shareState.is_authenticated && notifications.unread_follows_count">{{notifications.unread_follows_count}}</span>
             </router-link>
 
 
 
             <router-link 
-            :to="{name:'Likes'}" 
+            :to="{name:'CommentsLikes'}" 
             v-bind:active-class="'active'"
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
               <i class="fa fa-bell-o mr-2"></i> 收到的赞
+              <span class="badge badge-danger g-font-size-dot7 ml-1" v-if="shareState.is_authenticated && notifications.unread_likes_count">{{notifications.unread_likes_count}}</span>
             </router-link>
           </div>  <!-- end item list -->
           
@@ -57,7 +59,7 @@
 
 			<div class="col-lg-8">
 				<div class="" style="">
-					<router-view v-if="shareState.update"></router-view>
+					<router-view ></router-view>
 				</div>
 			</div>
 				
@@ -68,10 +70,12 @@
 <script>
 import store from '../../store'
 import axios from 'axios'
+import clear_comments from '../utility/clear_comments'
 export default {
     data(){
       return {
         shareState:store.state,
+        routeName:['RecivedComments','RecivedMessages','Follows','CommentsLikes'],
         user:{
           username:'',
           name:'',
@@ -117,6 +121,12 @@ export default {
                 case 'unread_recived_comments_count':
                   this.notifications.unread_recived_comments_count = res.data[i].payload_json
                   break;
+                case 'unread_follows_count':
+                  this.notifications.unread_follows_count = res.data[i].payload_json;
+                  break;
+                case 'unread_likes_count':
+                  this.notifications.unread_likes_count = res.data[i].payload_json;
+                  break;
               }
             }
 
@@ -130,7 +140,25 @@ export default {
       this._getUser(this.shareState.user_id)
     },
     beforeRouteUpdate(to,from,next){
+      this.shareState.notifications.leaveRouteName = to.name
+      if(from.path != to.path){
+        //非分页跳转的情况，把from的消息清掉
+        let thisType = this.routeName.indexOf(from.name)
+        if(thisType!=-1){
+          // console.log(thisType)
+          clear_comments({that:this,type:thisType})
+        }
+        
+      }
+      next()
       this._getUserNotifications()
+    },
+    beforeRouteLeave(to,from,next){
+      //路由离开前把from的消息清掉
+      let thisType = this.routeName.indexOf(from.name)
+      if(thisType!=-1){
+        clear_comments({that:this,type:thisType})
+      }
       next()
     }
 }

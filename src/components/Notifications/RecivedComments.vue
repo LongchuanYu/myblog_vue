@@ -46,10 +46,16 @@
       <div class="w-100">
         <div class="d-flex mb-2">
           
-          <span class="align-self-center">
+          <span class="align-self-center" v-if="comment.parent_id">
+            <router-link :to="{path:`/user/${comment.author.id}`}">{{comment.author.username||comment.author.name}}</router-link>
+            在文章
+            <router-link :to="{path:`/post/${comment.post.id}#c${comment.id}`}">《{{comment.post.title}}》</router-link>
+            中回复了你
+          </span>
+          <span class="align-self-center" v-else>
             <router-link :to="{path:`/user/${comment.author.id}`}">{{comment.author.username||comment.author.name}}</router-link>
             评论了你的文章
-            <router-link :to="{path:`/post/${comment.post.id}`}">《{{comment.post.title}}》</router-link>
+            <router-link :to="{path:`/post/${comment.post.id}#c${comment.id}`}">《{{comment.post.title}}》</router-link>
           </span>
           <span class="ml-auto g-font-size-dot7 align-self-center">{{$moment(comment.timestamp).format('YYYY/MM/DD HH:mm:ss')}}</span>
         </div>
@@ -109,7 +115,7 @@ export default {
     
     _getUserRecivedComments(){
       let page = this.$route.query.page || 1
-      let per_page = this.$route.query.per_page || 2
+      let per_page = this.$route.query.per_page || 10
       const path = `/users/${this.shareState.user_id}/recived-comments/?page=${page}&per_page=${per_page}`
       this.$axios.get(path).then(res=>{
         console.log('recived-comments:',res.data)
@@ -126,10 +132,7 @@ export default {
     next()
     this._getUserRecivedComments()
   },
-  beforeRouteLeave(to,from,next){
-    next()
-    clear_comments({that:this,type:0})
-  }
+
 }
 </script>
 

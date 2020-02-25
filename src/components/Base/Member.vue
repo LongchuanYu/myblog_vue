@@ -14,7 +14,7 @@
                 <strong class="m-0">关注时间：</strong><span>{{$moment(member.timestamp).format('YYYY/MM/DD HH:mm:ss')}}</span>
             </p>
         </div>
-        <div class="align-self-center ml-auto">
+        <div class="align-self-center ml-auto" v-if="$route.params.id==shareState.user_id">
             <button v-if="member.is_following" class="btn btn-primary" @click="$emit('unfollow-user')">取消关注</button>
             <button v-else-if="!member.is_following && shareState.user_id != member.id" class="btn btn-primary" @click="$emit('follow-user')">关注</button>
         </div>

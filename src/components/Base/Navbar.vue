@@ -43,8 +43,13 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="nav-item mr-3">
-            <router-link :to="{path:'/notifications/comments'}" class="nav-link" @click.native="forceRefresh">
-              通知<span class="badge badge-danger g-font-size-dot7 ml-1" id="new_notifications_count" style="visibility: hidden;" v-if="shareState.is_authenticated">0</span>
+            <router-link 
+              :to="{name:shareState.notifications.leaveRouteName}" 
+              class="nav-link d-flex align-items-center" 
+              @click.native="forceRefresh">
+              <span class="">通知</span>
+              <span class="badge badge-danger g-font-size-dot7 ml-1" id="new_notifications_count" style="visibility: hidden;" v-if="shareState.is_authenticated">0</span>
+              
             </router-link>
           </li>
         </ul>
@@ -107,18 +112,17 @@ export default {
   mounted:function(){
     const LOOP_TIME = 10 * 1000;
     let that = this;
-    
     $(function(){
-      let total_notifications_count = 0
-      var interval = setInterval(()=>{
+      var $interval = setInterval(()=>{
+        console.log('interval...')
         if(window.localStorage.getItem('madblog-token')){
           let path = `/users/${that.shareState.user_id}/notifications`
-          
+          let total_notifications_count = 0
           axios.get(path).then(res=>{
             // console.log(res)
             //res.data[].id/name/payload_json/
             for(let i=0;i<res.data.length;i++){
-              total_notifications_count = parseInt(res.data[i].payload_json)
+              total_notifications_count += parseInt(res.data[i].payload_json)
             }
             $("#new_notifications_count").text(total_notifications_count)
             $("#new_notifications_count").css('visibility',total_notifications_count?'visible':'hidden')

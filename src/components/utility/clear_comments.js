@@ -5,7 +5,6 @@ export default function clear_comments(args){
   }).catch(e=>{
     console.log('ClearCommentsError:',e.response)
   })
-  console.log('leave....')
 
 }
 
