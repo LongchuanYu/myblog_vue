@@ -13,7 +13,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Update Post</h5>
+            <h5 class="modal-title" id="exampleModalLabel">编辑</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -45,8 +45,8 @@
                 <div class="invalid-feedback">{{editForm.bodyError}}</div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">提交</button>
               </div>
             </form>
           </div>
@@ -67,15 +67,15 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalDeleteLabel">Delete</h5>
+            <h5 class="modal-title" id="modalDeleteLabel">删除</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">Are you sure？</div>
+          <div class="modal-body">确定删除 ？</div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            <button type="button" class="btn btn-primary" @click="onDeletePost">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" @click="onDeletePost">确定</button>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
         <div class="float-left">
           <!-- posts总览 -->
           <i class="fa fa-commenting-o"></i>
-          All Posts
+          所有文章
           <small
             class="font-weight-normal"
           >（共{{posts._meta?posts._meta.total_items:''}}篇，{{posts._meta?posts._meta.total_pages:''}}页）</small>
@@ -164,7 +164,7 @@
         <textarea v-model="postForm.body" id="post_body" rows="5" class="form-control"></textarea>
         <div class="invalid-feedback">{{postForm.bodyError}}</div>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">提交</button>
     </form>
   </div>
   <!--Container结束-->

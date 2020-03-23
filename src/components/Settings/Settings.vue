@@ -17,28 +17,28 @@
             href="#" 
             :class="isUserProfile"
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-pencil-square-o mr-2"></i> Profile
+              <i class="fa fa-pencil-square-o mr-2"></i> 个人资料
             </router-link>
             <router-link 
             :to="{name:'SettingAccount'}"
             v-bind:active-class="'active'" 
             href="#" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-user-o mr-2"></i> Account
+              <i class="fa fa-user-o mr-2"></i> 我的账号
             </router-link>
             <router-link 
             :to="{name:'SettingEmail'}" 
             v-bind:active-class="'active'"
             href="#" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-envelope-o mr-2"></i> Email
+              <i class="fa fa-envelope-o mr-2"></i> 我的邮箱
             </router-link>
             <router-link 
             :to="{name:'SettingNotiffication'}" 
             v-bind:active-class="'active'"
             href="#" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-bell-o mr-2"></i> Notiffication
+              <i class="fa fa-bell-o mr-2"></i> 我的通知
             </router-link>
           </div>  <!-- end item list -->
           

@@ -2,19 +2,19 @@
     <div class="">
 			<form @submit.prevent="onSubmit">
 				<div class="form-group">
-					<label for="nickname">Name</label>
+					<label for="nickname">名字</label>
 					<input type="text" class="form-control" id="nickname" v-model="profileForm.name">
 						
 				</div>
 				<div class="form-group">
-					<label for="location">Location</label>
+					<label for="location">我的位置</label>
 					<input type="text" class="form-control" id="location" v-model="profileForm.location">
 				</div>
 				<div class="form-group">
-					<label for="aboutme">About me</label>
+					<label for="aboutme">个性签名</label>
 					<textarea class="form-control" id="aboutme" rows="5" v-model="profileForm.about_me"></textarea>
 				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
+				<button type="submit" class="btn btn-primary">提交</button>
 			</form>
     </div>
 </template>

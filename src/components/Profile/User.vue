@@ -13,13 +13,13 @@
               :to="{name:'SettingProfile'}"
               v-if="sharestate.user_id == $route.params.id"
             >
-              <button type="button" class="btn btn-outline-primary w-100 mb-2">Settings</button>
+              <button type="button" class="btn btn-outline-primary w-100 mb-2">编辑个人资料</button>
             </router-link>
             <button
               type="button"
               class="btn btn-outline-danger w-100 mb-5"
               v-if="sharestate.user_id == $route.params.id"
-            >Delete Account</button>
+            >删除账户</button>
             <button
               type="button"
               class="btn btn-outline-primary w-100 mb-5"

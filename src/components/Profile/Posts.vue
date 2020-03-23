@@ -5,7 +5,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
       <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Update Post</h5>
+          <h5 class="modal-title" id="exampleModalLabel">编辑</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
@@ -24,8 +24,8 @@
               <div class="invalid-feedback">{{editForm.bodyError}}</div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary">确定</button>
           </div>
 
           </form>
@@ -65,7 +65,7 @@
       <div class="float-left">
         <!-- 文章数量，页数 -->
         <i class="fa fa-commenting-o"></i>
-        All Posts
+        所有文章
         <small
           class="font-weight-normal"
         >（共{{posts._meta?posts._meta.total_items:''}}篇，{{posts._meta?posts._meta.total_pages:''}}页）</small>

@@ -7,7 +7,7 @@
     <div class="float-left">
       <!-- posts总览 -->
       <i class="fa fa-commenting-o"></i>
-      All Reply
+      所有回复
       <small
         v-if="comments._meta"
         class="font-weight-normal"

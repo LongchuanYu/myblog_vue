@@ -28,7 +28,7 @@
             v-bind:active-class="'active'" 
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-user-o mr-2"></i> 私信
+              <i class="fa fa-envelope-o mr-2"></i> 私信
             </router-link>
 
 
@@ -37,7 +37,7 @@
             v-bind:active-class="'active'"
             href="javascript:;" 
             class="list-group-item list-group-item-action border-0 p-2">
-              <i class="fa fa-envelope-o mr-2"></i> 新粉丝
+              <i class="fa fa-user-o mr-2"></i> 新粉丝
               <span class="badge badge-danger g-font-size-dot7 ml-1" v-if="shareState.is_authenticated && notifications.unread_follows_count">{{notifications.unread_follows_count}}</span>
             </router-link>
 

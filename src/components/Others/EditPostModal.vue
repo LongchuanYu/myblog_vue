@@ -26,8 +26,8 @@
                 <div class="invalid-feedback">{{editForm_.bodyError}}</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit_modal_cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="edit_modal_update">Update</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit_modal_cancel">取消</button>
+                <button type="submit" class="btn btn-primary" id="edit_modal_update">确定</button>
             </div>
 
             </form>

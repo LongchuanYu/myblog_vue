@@ -2,39 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // 导入 vue-scrollto，跳转到锚点时支持平滑过渡
 import VueScrollTo from 'vue-scrollto'
-//首页
-import Home from '@/components/Home'
-//用户认证
-import Register from '@/components/Auth/Register'
-import Login from '@/components/Auth/Login'
-//用户个人主页
-import User from '@/components/Profile/User'
-import Followers from '@/components/Profile/Followers'
-import Following from '@/components/Profile/Following'
-import Overview from '@/components/Profile/Overview'
-import Posts from '@/components/Profile/Posts'
 
-//用户个人设置
-import Settings from '@/components/Settings/Settings'
-import Profile from '@/components/Settings/Profile'
-import Account from '@/components/Settings/Account'
-import Email from '@/components/Settings/Email'
-import Notiffication from '@/components/Settings/Notiffication'
 
-//用户资源
-
-//用户通知
-import FollowingPosts from '@/components/Notifications/FollowingPosts'
-import CommentsLikes from '@/components/Notifications/CommentsLikes'
-import Notifications from '@/components/Notifications/Notifications'
-import RecivedComments from '@/components/Notifications/RecivedComments'
-import RecivedMessages from '@/components/Notifications/RecivedMessages'
-
-//博客详情页
-import PostDetail from '@/components//PostDetail'
-
-//ping
-import Ping from '@/components/Ping'
 
 Vue.use(Router)
 // （？）锚点滚动的问题，路由改成history模式之后不能自动滚动到锚点，如何解决？ +
@@ -79,59 +48,59 @@ const router = new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: resolve => require(['@/components/Home'],resolve)
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: resolve => require(['@/components/Auth/Login'],resolve)
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: resolve => require(['@/components/Auth/Register'],resolve)
     },
     {
       path: '/ping',
       name: 'Ping',
-      component: Ping
+      component: resolve => require(['@/components/Ping'],resolve)
     },{
       path:'/user/:id',
       children:[
-        {path:'',component:Overview},
-        {path: 'overview', name: 'UserOverview', component: Overview },
-        {path:'followers',name:'UserFollowers',component:Followers},
-        {path:'following',name:'UserFollowing',component:Following},
-        {path:'posts',name:'Posts',component:Posts}
+        {path:'',component:resolve => require(['@/components/Profile/Overview'],resolve)},
+        {path: 'overview', name: 'UserOverview', component: resolve => require(['@/components/Profile/Overview'],resolve) },
+        {path:'followers',name:'UserFollowers',component:resolve => require(['@/components/Profile/Followers'],resolve)},
+        {path:'following',name:'UserFollowing',component:resolve => require(['@/components/Profile/Following'],resolve)},
+        {path:'posts',name:'Posts',component:resolve => require(['@/components/Profile/Posts'],resolve)}
       ],
-      component:User,
+      component:resolve => require(['@/components/Profile/User'],resolve),
       meta:{
         requiresAuth:true
       }
     },{
       path:'/post/:id',
       name:'PostDetail',
-      component:PostDetail
+      component:resolve => require(['@/components//PostDetail'],resolve)
     },{
       path:'/settings',
-      component:Settings,
+      component:resolve => require(['@/components/Settings/Settings'],resolve),
       children:[
-        {path:'',component:Profile},
-        {path:'profile',name:'SettingProfile',component:Profile},
-        {path:'account',name:'SettingAccount',component:Account},
-        {path:'email',name:'SettingEmail',component:Email},
-        {path:'notiffication',name:'SettingNotiffication',component:Notiffication}
+        {path:'',component:resolve => require(['@/components/Settings/Profile'],resolve)},
+        {path:'profile',name:'SettingProfile',component:resolve => require(['@/components/Settings/Profile'],resolve)},
+        {path:'account',name:'SettingAccount',component:resolve => require(['@/components/Settings/Account'],resolve)},
+        {path:'email',name:'SettingEmail',component:resolve => require(['@/components/Settings/Email'],resolve)},
+        {path:'notiffication',name:'SettingNotiffication',component:resolve => require(['@/components/Settings/Notiffication'],resolve)}
       ]
     },{
       path:'/notifications',
-      component:Notifications,
+      component:resolve => require(['@/components/Notifications/Notifications'],resolve),
       children:[
-        {path:'',component:RecivedComments},
-        {path:'comments',name:'RecivedComments',component:RecivedComments},
-        {path:'messages',name:'RecivedMessages',component:RecivedMessages},
-        {path:'follows',name:'Follows',component:Followers},
-        { path: 'commentslikes', name: 'CommentsLikes', component: CommentsLikes },
-        { path: 'following-posts', name: 'FollowingPosts', component: FollowingPosts }
+        {path:'',component:resolve => require(['@/components/Notifications/RecivedComments'],resolve)},
+        {path:'comments',name:'RecivedComments',component:resolve => require(['@/components/Notifications/RecivedComments'],resolve)},
+        {path:'messages',name:'RecivedMessages',component:resolve => require(['@/components/Notifications/RecivedMessages'],resolve)},
+        {path:'follows',name:'Follows',component:resolve => require(['@/components/Profile/Followers'],resolve)},
+        { path: 'commentslikes', name: 'CommentsLikes', component: resolve => require(['@/components/Notifications/CommentsLikes'],resolve) },
+        { path: 'following-posts', name: 'FollowingPosts', component: resolve => require(['@/components/Notifications/FollowingPosts'],resolve) }
       ],
       meta:{
         requiresAuth:true

@@ -195,8 +195,8 @@
             <textarea v-model="commentForm.body_reply" id="reply_body" rows="5" class="form-control" :placeholder="'回复 '+commentForm.author_name"></textarea>
             <div class="invalid-feedback"></div>
           </div>
-          <button type="reset" class="btn btn-secondary btn-sm">Cancel</button>
-          <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+          <button type="reset" class="btn btn-secondary btn-sm">取消</button>
+          <button type="submit" class="btn btn-primary btn-sm">确定</button>
         </form>
         <!-- End 回复框 -->
         <!-- create comment -->
@@ -210,7 +210,7 @@
               <textarea v-model="commentForm.body_comment" id="comment_body" rows="5" class="form-control"></textarea>
               <div class="invalid-feedback"></div>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">提交评论</button>
           </form>
         </div>
         <!-- End create comment -->

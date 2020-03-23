@@ -4,7 +4,7 @@
         <div class="card-header d-flex align-items-center justify-content-between bg-light border-0 mb-3">
             <div class="float-left"> <!-- posts总览 -->
                 <i class="fa fa-commenting-o"></i>
-                All Posts<small class="font-weight-normal">（共{{followeds?followeds._meta.total_items:''}}个，{{followeds?followeds._meta.total_pages:''}}页）</small>
+                所有关注<small class="font-weight-normal">（共{{followeds?followeds._meta.total_items:''}}个，{{followeds?followeds._meta.total_pages:''}}页）</small>
             </div>
             <div class="dropdown"> <!-- 其他选择，弹出选项 -->
                 <div class="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
