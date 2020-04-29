@@ -88,7 +88,7 @@ export default {
           'username': this.loginForm.username,
           'password': this.loginForm.password
         }
-      }).then((response) => {          
+      }).then((response) => {         
           // handle success
           window.localStorage.setItem('madblog-token', response.data.token)
           store.loginAction()
@@ -105,11 +105,12 @@ export default {
         })
         .catch((error) => {
           // handle error
+          // console.log(error)
           if (error.response.status == 401) {
             this.loginForm.usernameError = 'Invalid username or password.'
             this.loginForm.passwordError = 'Invalid username or password.'
           } else {
-            console.log(error.response)
+            console.log('error!!!'+error)
           }
         })
     }
