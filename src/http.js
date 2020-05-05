@@ -4,16 +4,21 @@ import store from './store'
 import router from './router'
 axios.defaults.timeout = 5000
 // axios.defaults.baseURL = 'http://49.234.18.49:5000/api'
+<<<<<<< HEAD
 axios.defaults.baseURL = 'http://localhost:5000/api'
+=======
+axios.defaults.baseURL = 'http://localhost:5000/api/'
+>>>>>>> 3dcbad2072c553c90feaaa668bb70fd23f722345
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     const token = window.localStorage.getItem('madblog-token')
-    // console.log('request ok..')
+    
     if(token){
         config.headers.Authorization = `Bearer ${token}`
     }
+    // console.log('request ok..')
     return config
   }, function (error) {
     //   console.log('request error...')
