@@ -97,7 +97,14 @@ const router = new Router({
       children:[
         {path:'',component:resolve => require(['@/components/Notifications/RecivedComments'],resolve)},
         {path:'comments',name:'RecivedComments',component:resolve => require(['@/components/Notifications/RecivedComments'],resolve)},
-        {path:'messages',name:'RecivedMessages',component:resolve => require(['@/components/Notifications/RecivedMessages'],resolve)},
+        {
+          path:'messages',name:'RecivedMessages',component:resolve => require(['@/components/Notifications/RecivedMessages'],resolve),
+          children:[{
+            path:':id',
+            name:'MessagesHistory',
+            component:resolve => require(['@/components/Notifications/Message/history'],resolve)
+          }]
+        },
         {path:'follows',name:'Follows',component:resolve => require(['@/components/Profile/Followers'],resolve)},
         { path: 'commentslikes', name: 'CommentsLikes', component: resolve => require(['@/components/Notifications/CommentsLikes'],resolve) },
         { path: 'following-posts', name: 'FollowingPosts', component: resolve => require(['@/components/Notifications/FollowingPosts'],resolve) }

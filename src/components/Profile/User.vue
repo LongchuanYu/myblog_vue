@@ -32,6 +32,11 @@
               v-else-if="sharestate.user_id != $route.params.id && !user.is_following"
               @click="onFollowUser($route.params.id)"
             >关注</button>
+            <router-link
+              :to="{name:'RecivedMessages',params:{msg_who_id:$route.params.id,msg_who:user.username}}"
+            >click me</router-link>
+
+            </button>
 
             <!-- <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
                         <button type="button" class="btn btn-outline-primary w-100 mb-5">Edit profile</button>

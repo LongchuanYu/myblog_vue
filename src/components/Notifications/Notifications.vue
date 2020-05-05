@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="row">
+		<div class="row" >
 			<div class="col-lg-3 mb-5">
         <div class="border p-4" style="height:400px;">
           <!-- avatar -->
@@ -57,7 +57,7 @@
 			</div>
 
 
-			<div class="col-lg-8">
+			<div class="col-lg-9">
 				<div class="" style="">
 					<router-view ></router-view>
 				</div>
