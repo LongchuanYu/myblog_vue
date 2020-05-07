@@ -148,6 +148,7 @@ router.beforeEach((to, from, next) => {
     //放行
     next()
   }
+
 })
 
 export default router
