@@ -28,5 +28,7 @@ export default {
 </script>
 
 <style>
-
+#app{
+  font-family: “Arial”,”Microsoft YaHei”,”黑体”,”宋体”,sans-serif;
+}
 </style>

@@ -23,3 +23,16 @@ a:hover{
 .g-color-danger--hover:hover{
   color:#dc3545;
 }
+h1,.h1{
+  font-size: 2em;
+  font-weight:bold;
+}
+h2,.h2{
+  font-size: 1.8em;
+}
+h3,.h3{
+  font-size: 1.5em;
+}
+h4,.h4{
+  font-size: 1.3em;
+}
