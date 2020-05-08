@@ -59,6 +59,18 @@ const router = new Router({
       path: '/register',
       name: 'Register',
       component: resolve => require(['@/components/Auth/Register'],resolve)
+    },{
+      path:'/unconfirmed',
+      name:'Unconfirmed',
+      component:resolve=>require(['@/components/Auth/unconfirmed'],resolve),
+      meta:{
+        requiresAuth:true
+      }
+    },
+    {
+      path: '/reset-password-request',
+      name: 'ResetPasswordRequest',
+      component: resolve=>require(['@/components/Auth/ResetPasswordRequest'],resolve)
     },
     {
       path: '/ping',
@@ -124,6 +136,13 @@ router.beforeEach((to, from, next) => {
     return;
   }
   const token = window.localStorage.getItem('madblog-token')
+
+
+  if (token){
+    var payload = JSON.parse(
+      atob(token.split('.')[1])
+    )
+  }
   //（？）some如何理解？
   //  es6的some方法，有一个true则返回true。相应的every方法，全部true才返回true
   //  这里的record表示matched数组的项
@@ -138,7 +157,20 @@ router.beforeEach((to, from, next) => {
       path: '/login',
       query: { redirect: to.fullPath }
     })
-  } else if (token && to.name == 'Login') {
+
+  }else if (token && !payload.confirmed && to.name != 'Unconfirmed') {
+    // 2. 用户刚注册，但是还没确认邮箱地址时，全部跳转到 认证提示 页面
+    Vue.toasted.show('请验证您的邮箱，先~', { icon: 'fingerprint' })
+    next({
+      path: '/unconfirmed',
+      query: { redirect: to.fullPath }
+    })
+  } else if (token && payload.confirmed && to.name == 'Unconfirmed') {
+    // 3. 用户账户已确认，但又去访问 认证提示 页面时不让他过去
+    next({
+      path: '/'
+    })
+  }else if (token && to.name == 'Login') {
     // 用户已登录，但又去访问登录页面时不让他过去
     // next({
     //   path: from.fullPath

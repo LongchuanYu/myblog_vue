@@ -1,28 +1,28 @@
 <template>
   <div class="container">
-    <h1>Register</h1>
+    <h1>注册</h1>
     <div class="row">
       <div class="col-md-4">
         <!-- 事件修饰符，提交事件不再重载页面，方法onSubmit定义在在methods中 -->
         <form @submit.prevent="onSubmit">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">用户名</label>
             <!-- 这里v-mode实现表单的双向数据绑定 -->
             <input type="text" v-model="registerForm.username" class="form-control" v-bind:class="{'is-invalid': registerForm.usernameError}" id="username" placeholder="">
             <div v-show="registerForm.usernameError" class="invalid-feedback">{{ registerForm.usernameError }}</div>
           </div>
           <div class="form-group">
-            <label for="email">Email address</label>
+            <label for="email">邮件地址</label>
             <input type="email" v-model="registerForm.email" class="form-control" v-bind:class="{'is-invalid': registerForm.emailError}" id="email" aria-describedby="emailHelp" placeholder="">
-            <small v-if="!registerForm.emailError" id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            
             <div v-show="registerForm.emailError" class="invalid-feedback">{{ registerForm.emailError }}</div>
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">密码</label>
             <input type="password" v-model="registerForm.password" class="form-control" v-bind:class="{'is-invalid': registerForm.passwordError}" id="password" placeholder="">
             <div v-show="registerForm.passwordError" class="invalid-feedback">{{ registerForm.passwordError }}</div>
           </div>
-          <button type="submit" class="btn btn-primary">Register</button>
+          <button type="submit" class="btn btn-primary">注册</button>
         </form>
       </div>
     </div>
@@ -81,6 +81,7 @@ export default {
       }
       const path = '/users'
       const payload = {
+        confirm_email_base_url: window.location.href.split('/', 4).join('/') + '/unconfirmed/?token=',
         username: this.registerForm.username,
         email: this.registerForm.email,
         password: this.registerForm.password
@@ -88,6 +89,7 @@ export default {
       this.$axios.post(path, payload)
         .then((response) => {
           // handle success
+          this.$toasted.success('确认邮件已发送到您的邮箱，请注意查收！', { icon: 'fingerprint' })
           this.$router.push('/login')
         })
         .catch((error) => {
