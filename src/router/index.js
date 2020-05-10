@@ -153,6 +153,7 @@ router.beforeEach((to, from, next) => {
   //（？）为什么要跳转到一个带查询参数的url？
   //  初步理解是记录登录前的url，登陆之后根据这个url跳转到登录前的界面
   if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
+    Vue.toasted.info('请输入账号密码登录...')
     next({
       path: '/login',
       query: { redirect: to.fullPath }
