@@ -1,5 +1,33 @@
 <template>
   <section>
+    <!-- Modal: Send Messages -->
+    <div data-backdrop="static" class="modal fade" id="sendMessagesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">群发私信</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form id="sendMessagesForm" @submit.prevent="onSubmitSendMessages" @reset.prevent="onResetSendMessages">
+              <div class="form-group">
+                <textarea v-model="sendMessagesForm.body" class="form-control" id="sendMessagesFormBody" rows="5" placeholder=" 内容"></textarea>
+                <!-- <small class="form-control-feedback" v-show="sendMessagesForm.bodyError">{{ sendMessagesForm.bodyError }}</small> -->
+              </div>
+              <button type="reset" class="btn btn-secondary">取消</button>
+              <button type="submit" class="btn btn-primary">发送</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal: Send Messages -->
+
+    
     <div class="container">
       <div class="border p-3">
         <div class="row">
@@ -33,9 +61,16 @@
               @click="onFollowUser($route.params.id)"
             >关注</button>
             <router-link
+              class="btn btn-outline-primary w-100 mb-5"
+              v-if="sharestate.user_id != $route.params.id"
               :to="{name:'RecivedMessages',params:{msg_who_id:$route.params.id,msg_who:user.username}}"
-            >click me</router-link>
+            >发送私信</router-link>
 
+            <button 
+              class="btn btn-outline-primary w-100 mb-5"
+              v-if="$route.params.id == sharestate.user_id && sharestate.user_perms.includes('admin')" 
+              data-toggle="modal" data-target="#sendMessagesModal">
+              群发私信
             </button>
 
             <!-- <router-link :to="{name:'EditProfile',params:{id:sharestate.user_id}}" v-if="sharestate.user_id == $route.params.id">
@@ -133,6 +168,9 @@ export default {
           self: "",
           avatar: ""
         }
+      },
+      sendMessagesForm:{
+        body:'',
       }
     };
   },
@@ -194,6 +232,28 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    onSubmitSendMessages(){
+      if (this.sendMessagesForm.body==''){
+        this.$toasted.error('啥都没写啊...', { icon: 'fingerprint' })
+        return
+      }
+      var payload ={
+        body:this.sendMessagesForm.body
+      }
+      const path = `/send-messages`
+      this.$axios.post(path,payload).then(res=>{
+        console.log(res)
+        this.$toasted.success('群发中...')
+        this.onResetSendMessages()
+      }).catch(e=>{
+        console.log(e.response)
+      })
+    },
+    onResetSendMessages(){
+      this.sendMessagesForm.body = ''
+      $('#sendMessagesModal').modal('hide')
+
     }
   },
   created: function() {

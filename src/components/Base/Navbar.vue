@@ -72,6 +72,7 @@
                   v-bind:to="{ path:`/user/${shareState.user_id}`}"
                   class="dropdown-item"
                 >个人资料</router-link>
+                <router-link to="/admin" class="dropdown-item" v-if="shareState.is_authenticated && shareState.user_perms.includes('admin')">后台管理</router-link>
                 <a class="dropdown-item" href="#">设置</a>
                 <div class="dropdown-divider"></div>
                 <a v-on:click="handlerLogout" class="dropdown-item" href="#">注销登录</a>

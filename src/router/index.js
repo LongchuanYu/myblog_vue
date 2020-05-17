@@ -45,6 +45,7 @@ const router = new Router({
   mode: 'history',
   scrollBehavior,
   routes: [
+    // 主页、登录、注册等等
     {
       path: '/',
       name: 'Home',
@@ -76,7 +77,9 @@ const router = new Router({
       path: '/ping',
       name: 'Ping',
       component: resolve => require(['@/components/Ping'],resolve)
-    },{
+    },
+    // 用户个人资料
+    {
       path:'/user/:id',
       children:[
         {path:'',component:resolve => require(['@/components/Profile/Overview'],resolve)},
@@ -89,11 +92,15 @@ const router = new Router({
       meta:{
         requiresAuth:true
       }
-    },{
+    },
+    // 文章
+    {
       path:'/post/:id',
       name:'PostDetail',
       component:resolve => require(['@/components//PostDetail'],resolve)
-    },{
+    },
+    // 设置
+    {
       path:'/settings',
       component:resolve => require(['@/components/Settings/Settings'],resolve),
       children:[
@@ -103,7 +110,9 @@ const router = new Router({
         {path:'email',name:'SettingEmail',component:resolve => require(['@/components/Settings/Email'],resolve)},
         {path:'notiffication',name:'SettingNotiffication',component:resolve => require(['@/components/Settings/Notiffication'],resolve)}
       ]
-    },{
+    },
+    // 通知类
+    {
       path:'/notifications',
       component:resolve => require(['@/components/Notifications/Notifications'],resolve),
       children:[
@@ -124,7 +133,26 @@ const router = new Router({
       meta:{
         requiresAuth:true
       }
-    }
+    },
+    // 后台管理类
+    {
+      // 管理后台
+      path: '/admin',
+      component: resolve => require(['@/components/Admin/Admin.vue'],resolve),
+      children: [
+        { path: '', component: resolve => require(['@/components/Admin/Roles.vue'],resolve) },
+        { path: 'roles', name: 'AdminRoles', component: resolve => require(['@/components/Admin/Roles.vue'],resolve)  },
+        { path: 'users', name: 'AdminUsers', component: resolve => require(['@/components/Admin/Users.vue'],resolve) },
+        { path: 'posts', name: 'AdminPosts', component: resolve => require(['@/components/Admin/Posts.vue'],resolve)  },
+        { path: 'comments', name: 'AdminComments', component: resolve => require(['@/components/Admin/Comments.vue'],resolve)  },
+        { path: 'add-role', name: 'AdminAddRole', component: resolve => require(['@/components/Admin/AddRoles.vue'],resolve)   },
+        { path: 'edit-role/:id', name: 'AdminEditRole', component: resolve => require(['@/components/Admin/EditRole.vue'],resolve)    },
+      ],
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+      }
+    },
 
   ]
 })
@@ -142,6 +170,7 @@ router.beforeEach((to, from, next) => {
     var payload = JSON.parse(
       atob(token.split('.')[1])
     )
+    var user_perms = payload.permissions.split(",")
   }
   //（？）some如何理解？
   //  es6的some方法，有一个true则返回true。相应的every方法，全部true才返回true
@@ -177,6 +206,12 @@ router.beforeEach((to, from, next) => {
     //   path: from.fullPath
     // })
     next(false)
+  }  else if (to.matched.some(record => record.meta.requiresAdmin) && token && !user_perms.includes('admin')) {
+    // 5. 普通用户想在浏览器地址中直接访问 /admin ，提示他没有权限，并跳转到首页
+    Vue.toasted.error('403: Forbidden', { icon: 'fingerprint' })
+    next({
+      path: '/'
+    })
   } else {
     //放行
     next()

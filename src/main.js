@@ -12,12 +12,12 @@ import './assets/custom.css'
 import VueToasted from 'vue-toasted'
 import axios from './http'
 import moment from 'moment'
-
+import swal from 'sweetalert';
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
 Vue.prototype.$moment = moment
-
+Vue.prototype.$swal = swal
 Vue.use(VueToasted, {
   // 主题样式 primary/outline/bubble
   theme: 'outline',

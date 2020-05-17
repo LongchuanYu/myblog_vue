@@ -9,7 +9,8 @@ export default {
       is_authenticated: window.localStorage.getItem('madblog-token') ? true : false,
       user_id:window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_id : 0,
       user_name: window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_name : '',
-      user_avatar: window.localStorage.getItem('madblog-token') ? atob(JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_avatar) : '' 
+      user_avatar: window.localStorage.getItem('madblog-token') ? atob(JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).user_avatar) : '' ,
+      user_perms: window.localStorage.getItem('madblog-token') ? JSON.parse(atob(window.localStorage.getItem('madblog-token').split('.')[1])).permissions.split(",") : ''
     },
 
     loginAction () {
@@ -22,6 +23,7 @@ export default {
       this.state.user_id = payload.user_id
       this.state.user_name = payload.user_name
       this.state.user_avatar = atob(payload.user_avatar)
+      this.state.user_perms = payload.permissions.split(",")  
     },
     logoutAction () {
       if (this.debug) console.log('logoutAction triggered')
@@ -31,6 +33,7 @@ export default {
       this.state.user_name = ''
       this.state.user_avatar = ''
       this.state.notifications.leaveRouteName='RecivedComments'
-
+      this.state.user_perms = ''
+ 
     }
   }

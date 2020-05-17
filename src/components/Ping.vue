@@ -15,14 +15,8 @@ export default {
   },
   methods: {
     onClick() {
-      // let test = store.state.test;
-      // console.log(test);
-      const path = '/users/1/test'
-      this.$axios.get(path).then(res=>{
-        console.log('ok')
-      }).catch(e=>{
-        console.log('TestError:',e)
-      })
+      let r = store.state.user_perms
+      console.log('ok')
     }
   }
 };
