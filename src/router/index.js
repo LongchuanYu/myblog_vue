@@ -145,7 +145,7 @@ const router = new Router({
         { path: 'users', name: 'AdminUsers', component: resolve => require(['@/components/Admin/Users.vue'],resolve) },
         { path: 'posts', name: 'AdminPosts', component: resolve => require(['@/components/Admin/Posts.vue'],resolve)  },
         { path: 'comments', name: 'AdminComments', component: resolve => require(['@/components/Admin/Comments.vue'],resolve)  },
-        { path: 'add-role', name: 'AdminAddRole', component: resolve => require(['@/components/Admin/AddRoles.vue'],resolve)   },
+        { path: 'add-role', name: 'AdminAddRole', component: resolve => require(['@/components/Admin/Addroles.vue'],resolve)   },
         { path: 'edit-role/:id', name: 'AdminEditRole', component: resolve => require(['@/components/Admin/EditRole.vue'],resolve)    },
       ],
       meta: {
