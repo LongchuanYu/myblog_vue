@@ -63,7 +63,7 @@ const router = new Router({
     },{
       path:'/unconfirmed',
       name:'Unconfirmed',
-      component:resolve=>require(['@/components/Auth/unconfirmed'],resolve),
+      component:resolve=>require(['@/components/Auth/Unconfirmed'],resolve),
       meta:{
         requiresAuth:true
       }
